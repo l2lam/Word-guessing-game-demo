@@ -13,10 +13,6 @@ let phrases = [
   new Phrase("cat", "meow!", "thing"),
 ];
 
-//let phrases = ["fox in a box", "dog at the park", "cat has a hat"];
-//let hints = ["starts with an 'f'", "rhymes with bog", "feline"];
-//let categories = ["person", "place", "thing"];
-let phraseIndex;
 let curPhrase;
 let guess, wrongGuesses;
 
@@ -35,7 +31,7 @@ function setup() {
 }
 
 function selectRandomPhrase() {
-	phraseIndex = Math.floor(random(0, phrases.length));
+	let phraseIndex = Math.floor(random(0, phrases.length));
 	print("index is ", phraseIndex);
 	curPhrase = phrases[phraseIndex];
 	guess = [];
@@ -52,13 +48,15 @@ function draw() {
 	textSize(50);
 	//text(curPhrase, 100, 60);
 	text(guess.join(" "), 100, 150);	
-	fill(255,0,0); // red
-	text(wrongGuesses.join(" "), 100, 250);
 
-  text(curPhrase.category, 100, 350);
+  textSize(30);
+	fill(255,0,0); // red
+	text(`${wrongGuesses.length} wrong guesses: ${wrongGuesses.join(" ")}`, 100, 200);
+
+  text(`Category: ${curPhrase.category}`, 100, 250);
   
     if (wrongGuesses.length > 1) {
-      text(curPhrase.hint, 100, 450);
+      text(`Hint: ${curPhrase.hint}`, 100, 300);
     }
 }
 
