@@ -10,7 +10,7 @@ let curPhrase;
 let guess, wrongGuesses;
 let score, perLetterPoints = 100;
 let pausePointsDisplay = 0, spinCount = 0, pauseFinalPointsDisplay = 0;
-let monoSynth;
+
 
 // The frame rate
 const fr = 10;
@@ -24,9 +24,6 @@ function setup() {
 
   // Set the frame rate
   frameRate(fr);
-
-  // Setup sound
-  monoSynth = new p5.MonoSynth();
 
   // initiate game
   selectRandomPhrase();
@@ -84,13 +81,6 @@ async function draw() {
   }
 }
 
-function playSpinSound() {
-  monoSynth.play('C4', 0.5, 0, 1/8);
-}
-function playScoreSelectedSound() {
-  monoSynth.play('C5', 0.8, 0, 1/2);
-}
-
 function drawMainScreen() {
   clear();
   fill(0, 0, 0); // black
@@ -114,7 +104,7 @@ function drawMainScreen() {
 
 function drawScore() {
   fill(0, 0, 0); // black
-  text(`Total Score: ${score}`, 100, 400);  
+  text(`Total Score: ${score}`, 100, 400);
 }
 
 function keyPressed() {
@@ -136,9 +126,16 @@ function processGuess(letter) {
   let phrase = curPhrase.phrase;
   for (var i = 0; i < phrase.length; i++) {
     if (phrase[i] === letter) {
-      result.push(i);
-      score += perLetterPoints;
-      guess[i] = letter;
+      if (guess[i] === letter) {
+        // Already guessed that!
+        playIncorrectGuessSound();
+      }
+      else {
+        result.push(i);
+        score += perLetterPoints;
+        guess[i] = letter;
+        playCorrectGuessSound();
+      }
     }
   }
 
@@ -149,9 +146,11 @@ function processGuess(letter) {
   }
   else if (wrongGuesses.includes(letter)) {
     print("You already guessed that!");
+    playIncorrectGuessSound();
   }
   else {
     wrongGuesses.push(letter);
     print("NO MATCH!");
+    playIncorrectGuessSound();
   }
 }
