@@ -1,7 +1,9 @@
 let phrases = [
-  new Phrase("fox in a box", "starts with f", "saying"),
-  new Phrase("dog", "woof!", "thing"),
+  //new Phrase("fox in a box", "starts with f", "saying"),
+  //new Phrase("dog", "woof!", "thing"),
   new Phrase("cat", "meow!", "thing"),
+  new Phrase("2 + 3 = 5", "math!", "addition"),
+  new Phrase("2 - 2 = 0", "math!", "addition"),
 ];
 
 let curPhrase;
@@ -111,7 +113,7 @@ function drawMainScreen() {
 
 function keyPressed() {
   // print("key pressed is", key);
-  if (key >= 'a' && key <= 'z') {
+  if (key.match(/^[a-z0-9+-=]+$/i)) {
     processGuess(key);
   }
   else if (key === '1') {
