@@ -1,6 +1,6 @@
 let phrases = [
-  //new Phrase("fox in a box", "starts with f", "saying"),
-  //new Phrase("dog", "woof!", "thing"),
+  new Phrase("fox in a box", "starts with f", "saying"),
+  new Phrase("dog", "woof!", "thing"),
   new Phrase("cat", "meow!", "thing"),
   new Phrase("2 + 3 = 5", "math!", "addition"),
   new Phrase("2 - 2 = 0", "math!", "addition"),
@@ -74,7 +74,7 @@ async function draw() {
     }
   }
   else if (spinCount > 0) {
-    pausePointsDisplay = Math.ceil(fr * 2 / Math.pow(spinCount, 2));
+    pausePointsDisplay = Math.ceil(fr / Math.pow(spinCount, 3));
     perLetterPoints = Math.ceil(random(100, 500));
     spinCount--;
     playSpinSound();
@@ -109,6 +109,12 @@ function drawMainScreen() {
   }
 
   text(`Points per letter: ${perLetterPoints}`, 100, 350);
+  drawScore();
+}
+
+function drawScore() {
+  fill(0, 0, 0); // black
+  text(`Total Score: ${score}`, 100, 400);  
 }
 
 function keyPressed() {
@@ -116,7 +122,7 @@ function keyPressed() {
   if (key.match(/^[a-z0-9+-=]+$/i)) {
     processGuess(key);
   }
-  else if (key === '1') {
+  else if (key === '`') {
     //await spinForPoints();
     spinCount = Math.ceil(random(10, 50));
   }
@@ -131,6 +137,7 @@ function processGuess(letter) {
   for (var i = 0; i < phrase.length; i++) {
     if (phrase[i] === letter) {
       result.push(i);
+      score += perLetterPoints;
       guess[i] = letter;
     }
   }
