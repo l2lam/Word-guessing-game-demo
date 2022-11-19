@@ -184,7 +184,7 @@ class Game {
     if (keyPressed.match(/^[a-z0-9+-=]+$/i)) {
       this.processGuess(keyPressed);
     }
-    else if (keyPressed === '`') {
+    else if (keyPressed === 'F1') {
       //await spinForPoints();
       this.spinCount = Math.ceil(random(10, 50));
     }

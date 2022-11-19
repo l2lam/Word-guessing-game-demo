@@ -39,7 +39,7 @@ function draw() {
 
 function keyPressed() {
   // print("key pressed is", key);
-  if (key === '~')
+  if (key === 'F2')
     startNewGame();
   else if (key !== 'Shift') game.processKeyInput(key);
 }

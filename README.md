@@ -5,6 +5,7 @@ This is a demonstration project used to teach programming by iteratively buildin
 # Who is this project for?
 
 Students who are being introduced to these computer programming concepts:
+
 - variables
 - arrays
 - loops
@@ -16,5 +17,21 @@ Students who are being introduced to these computer programming concepts:
 
 # How to play the game
 
-Players try to guess the hidden phrase by guessing one letter/character at a time.
+Players try to guess the hidden phrase by guessing one letter/character at a time by typing the character on the keyboard.
+Special characters and their functions:
 
+- `F1` - Spin for points
+- `F2` - Restart the game
+
+# Features
+
+- [x] Basic phrase guessing, revealing correct guesses
+- [x] Game over state
+- [x] Levels scheme
+- [x] Scoring/points scheme
+- [x] Points selection scheme
+- [x] Sound effects
+- [ ] Penalties scheme
+- [ ] Game modes
+  - [x] General mode
+  - [ ] Grade One mode
