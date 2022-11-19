@@ -55,28 +55,39 @@ class Game {
         case GameStates.GAME_OVER:
           this.drawGameOver();
           break;
+          
         case GameStates.SPINNING:
           this.perLetterPoints = Math.ceil(random(100, 500));
-          playSpinSound(0.1);
           let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 2));
-          this.pause(pauseMS);
-          
+
           this.spinCount--;
-          if (this.spinCount == 0) this.drawFinalSpinPoints();
-          else this.drawSpinPoints();
+          if (this.spinCount == 0) {
+            this.drawFinalSpinPoints();
+            pauseMS = 3000;
+            playScoreSelectedSound();
+          }
+          else {
+            this.drawSpinPoints();
+            playSpinSound(0.1);
+          }
+          this.pause(pauseMS);
           break;
+          
         case GameStates.SOLVED:
           this.drawSolvedMessage();
           this.level++;
           this.selectRandomPhrase();
           this.pause(3000);
           break;
+          
         case GameStates.CORRECT_GUESS:
-            let index = this.correctLetterIndices.shift();
-            this.guess[index] = this.curPhrase.phrase[index];
-            this.score += this.perLetterPoints;
-            playCorrectGuessSound();
-            this.pause(1000);
+          let index = this.correctLetterIndices.shift();
+          this.guess[index] = this.curPhrase.phrase[index];
+          this.score += this.perLetterPoints;
+          playCorrectGuessSound();
+          this.pause(1000);
+          // Intentionally pass through to draw the main screen.
+          
         default:
           this.drawMainScreen();
           break;
@@ -92,7 +103,7 @@ class Game {
     // Show level
     fill(0, 0, 200); // black
     textSize(20);
-    text(`Level ${this.level} - ${this.curPhrase.category}`, 100, 40);
+    text(`Level ${this.level} - ${this.curPhrase.category}, You have ${this.score} points`, 100, 40);
 
     // Show the puzzle
     fill(0, 200, 200); // black
@@ -105,14 +116,13 @@ class Game {
     // Show the other information
     textSize(20);
     fill(255, 0, 0); // red
-    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 200);
+    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 250);
 
     if (this.wrongGuesses.length > 1) {
       text(`Hint: ${this.curPhrase.hint}`, 100, 300);
     }
 
     text(`Points per letter: ${this.perLetterPoints}`, 100, 350);
-    this.drawScore();
   }
 
   drawSpinPoints() {
@@ -153,11 +163,6 @@ class Game {
     textAlign(CENTER, CENTER);
     textSize(70);
     text("Game Over", width / 2 + random(2), height / 2 + random(2));
-  }
-
-  drawScore() {
-    fill(0, 0, 0); // black
-    text(`Total Score: ${this.score}`, 100, 400);
   }
 
   selectRandomPhrase() {
@@ -201,7 +206,7 @@ class Game {
           playIncorrectGuessSound();
           break;
         }
-        else 
+        else
           this.correctLetterIndices.push(i);
       }
     }
@@ -214,6 +219,7 @@ class Game {
       }
       else {
         this.wrongGuesses.push(letter);
+        this.score -= this.perLetterPoints;
         print("NO MATCH!");
         playIncorrectGuessSound();
       }
