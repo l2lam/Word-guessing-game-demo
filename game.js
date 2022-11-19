@@ -3,8 +3,6 @@ const GameStates = {
   CORRECT_GUESS: "A letter is guessed correctly",
   GAME_OVER: "Game over",
   SPINNING: "Spinning for points",
-  //  PAUSE_POINT_SELECTION: "Pause to show point currently selected",
-  //  PAUSE_FINAL_POINT_SELECTION: "Pause to show final points selected",
   SOLVED: "Puzzle solved",
 };
 
@@ -56,7 +54,7 @@ class Game {
           this.drawGameOver();
           playGameOverSound();
           break;
-          
+
         case GameStates.SPINNING:
           this.perLetterPoints = Math.ceil(random(100, 500));
           let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 2));
@@ -73,7 +71,7 @@ class Game {
           }
           this.pause(pauseMS);
           break;
-          
+
         case GameStates.SOLVED:
           this.drawSolvedMessage();
           this.level++;
@@ -81,15 +79,15 @@ class Game {
           playPuzzleSolvedSound();
           this.pause(3000);
           break;
-          
+
         case GameStates.CORRECT_GUESS:
           let index = this.correctLetterIndices.shift();
           this.guess[index] = this.curPhrase.phrase[index];
           this.score += this.perLetterPoints;
           playCorrectGuessSound();
           this.pause(1000);
-          // Intentionally pass through to draw the main screen.
-          
+        // Intentionally pass through to draw the main screen.
+
         default:
           this.drawMainScreen();
           break;
@@ -188,12 +186,14 @@ class Game {
 
   // React to an input character
   processKeyInput(keyPressed) {
-    if (keyPressed.match(/^[a-z0-9+-=]$/i)) {
-      this.processGuess(keyPressed);
-    }
-    else if (keyPressed === 'F4') {
-      //await spinForPoints();
-      this.spinCount = Math.ceil(random(10, 50));
+    if (this.gameState() == GameStates.GUESSING) {
+      if (keyPressed.match(/^[a-z0-9+-=]$/i)) {
+        this.processGuess(keyPressed);
+      }
+      else if (keyPressed === 'F4') {
+        //await spinForPoints();
+        this.spinCount = Math.ceil(random(10, 50));
+      }
     }
   }
 
