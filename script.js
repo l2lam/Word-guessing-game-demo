@@ -2,8 +2,8 @@ let phrases = [
   new Phrase("fox in a box", "starts with f", "saying"),
   new Phrase("dog", "woof!", "thing"),
   new Phrase("cat", "meow!", "thing"),
-  new Phrase("2 + 3 = 5", "math!", "addition"),
-  new Phrase("2 - 2 = 0", "math!", "addition"),
+  //new Phrase("2 + 3 = 5", "math!", "addition"),
+ // new Phrase("2 - 2 = 0", "math!", "addition"),
 ];
 
 let game;
@@ -25,7 +25,7 @@ function setup() {
 }
 
 function startNewGame() {
-  game = new Game(phrases);
+  game = new Game(phrases, '_', fr);
 }
 
 function draw() {
