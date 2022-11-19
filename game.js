@@ -55,28 +55,39 @@ class Game {
         case GameStates.GAME_OVER:
           this.drawGameOver();
           break;
+          
         case GameStates.SPINNING:
           this.perLetterPoints = Math.ceil(random(100, 500));
-          playSpinSound(0.1);
           let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 2));
-          this.pause(pauseMS);
-          
+
           this.spinCount--;
-          if (this.spinCount == 0) this.drawFinalSpinPoints();
-          else this.drawSpinPoints();
+          if (this.spinCount == 0) {
+            this.drawFinalSpinPoints();
+            pauseMS = 3000;
+            playScoreSelectedSound();
+          }
+          else {
+            this.drawSpinPoints();
+            playSpinSound(0.1);
+          }
+          this.pause(pauseMS);
           break;
+          
         case GameStates.SOLVED:
           this.drawSolvedMessage();
           this.level++;
           this.selectRandomPhrase();
           this.pause(3000);
           break;
+          
         case GameStates.CORRECT_GUESS:
-            let index = this.correctLetterIndices.shift();
-            this.guess[index] = this.curPhrase.phrase[index];
-            this.score += this.perLetterPoints;
-            playCorrectGuessSound();
-            this.pause(1000);
+          let index = this.correctLetterIndices.shift();
+          this.guess[index] = this.curPhrase.phrase[index];
+          this.score += this.perLetterPoints;
+          playCorrectGuessSound();
+          this.pause(1000);
+          // Intentionally pass through to draw the main screen.
+          
         default:
           this.drawMainScreen();
           break;
@@ -201,7 +212,7 @@ class Game {
           playIncorrectGuessSound();
           break;
         }
-        else 
+        else
           this.correctLetterIndices.push(i);
       }
     }
@@ -214,6 +225,7 @@ class Game {
       }
       else {
         this.wrongGuesses.push(letter);
+        this.score -= this.perLetterPoints;
         print("NO MATCH!");
         playIncorrectGuessSound();
       }
