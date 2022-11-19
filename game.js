@@ -20,6 +20,7 @@ class Game {
     this.level = 1; // The current level
     this.phrases = phrases; // The total number of phrases in the game
     this.numPhrases = this.phrases.length;
+    this.correctLetterIndices = [];
     this.pauseUntilMilliSecond = 0; // The # of ms since the program started to pause until
 
     this.selectRandomPhrase();
@@ -29,6 +30,7 @@ class Game {
     if (this.level > this.numPhrases) return GameStates.GAME_OVER;
     if (this.spinCount > 0) return GameStates.SPINNING;
     if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED;
+    if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS;
     return GameStates.GUESSING;
   }
 
@@ -69,6 +71,12 @@ class Game {
           this.selectRandomPhrase();
           this.pause(3000);
           break;
+        case GameStates.CORRECT_GUESS:
+            let index = this.correctLetterIndices.shift();
+            this.guess[index] = this.curPhrase.phrase[index];
+            this.score += this.perLetterPoints;
+            playCorrectGuessSound();
+            this.pause(1000);
         default:
           this.drawMainScreen();
           break;
@@ -184,36 +192,31 @@ class Game {
 
   processGuess(letter) {
     // Find all instances of key in curPhrase
-    let result = [];
+    this.correctLetterIndices = [];
     let phrase = this.curPhrase.phrase;
     for (let i = 0; i < phrase.length; i++) {
       if (phrase[i] === letter) {
-        result.push(i);
         if (this.guess[i] === letter) {
           // Already guessed that!
           playIncorrectGuessSound();
+          break;
         }
-        else {
-          this.score += this.perLetterPoints;
-          this.guess[i] = letter;
-          playCorrectGuessSound();
-        }
+        else 
+          this.correctLetterIndices.push(i);
       }
     }
 
     // Check results for matches
-    if (result.length > 0) {
-      // we found a match
-      //print("Found matches at indices", result);
-    }
-    else if (this.wrongGuesses.includes(letter)) {
-      print("You already guessed that!");
-      playIncorrectGuessSound();
-    }
-    else {
-      this.wrongGuesses.push(letter);
-      print("NO MATCH!");
-      playIncorrectGuessSound();
+    if (this.correctLetterIndices.length == 0) {
+      if (this.wrongGuesses.includes(letter)) {
+        print("You already guessed that!");
+        playIncorrectGuessSound();
+      }
+      else {
+        this.wrongGuesses.push(letter);
+        print("NO MATCH!");
+        playIncorrectGuessSound();
+      }
     }
   }
 }
