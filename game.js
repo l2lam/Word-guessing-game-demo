@@ -1,3 +1,13 @@
+const GameStates = {
+  GUESSING: "Guessing",
+  CORRECT_GUESS: "A letter is guessed correctly",
+  GAME_OVER: "Game over",
+  SPINNING: "Spinning for points",
+  //  PAUSE_POINT_SELECTION: "Pause to show point currently selected",
+  //  PAUSE_FINAL_POINT_SELECTION: "Pause to show final points selected",
+  SOLVED: "Puzzle solved",
+};
+
 class Game {
   constructor(phrases, noGuessChar = '_', frameRate = 30) {
     this.noGuessChar = noGuessChar;
@@ -6,87 +16,67 @@ class Game {
     this.wrongGuesses = [];
     this.score = 0;
     this.perLetterPoints = 100;
-    this.pausePointsDisplay = 0;
-    this.spinCount = 0;
-    this.pauseFinalPointsDisplay = 0;
-    this.phraseCompleteLoop = 0;
-    this.level = 1;
-    this.phrases = phrases;
+    this.spinCount = 0; // The number of times to spin for points
+    this.level = 1; // The current level
+    this.phrases = phrases; // The total number of phrases in the game
     this.numPhrases = this.phrases.length;
-    this.congratulationsPhrase = "";
+    this.pauseUntilMilliSecond = 0; // The # of ms since the program started to pause until
 
     this.selectRandomPhrase();
+  }
+
+  gameState() {
+    if (this.level > this.numPhrases) return GameStates.GAME_OVER;
+    if (this.spinCount > 0) return GameStates.SPINNING;
+    if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED;
+    return GameStates.GUESSING;
+  }
+
+  pause(ms) {
+    this.pauseUntilMilliSecond = millis() + ms;
   }
 
   isGameOver() {
     return this.level > this.numPhrases;
   }
+  isPhraseComplete() {
+    return !this.guess.includes(this.noGuessChar);
+  }
 
   // Draw the game screen(s)
   render() {
-    if (this.isGameOver()) {
-      clear();
-      fill(255, 0, 0);
-      textAlign(CENTER, CENTER);
-      textSize(70);
-      text("Game Over", width / 2 + random(2), height / 2 + random(2));
-    }
-    // Score spinner display
-    else if (this.pauseFinalPointsDisplay > 0) {
-      clear();
-      fill(0, 255, 0);
-      textAlign(CENTER, CENTER);
-      textSize(30);
-      text("Done!", width / 2, height / 2 - 100);
-      textSize(70);
-      text(this.perLetterPoints, width / 2, height / 2);
-      this.pauseFinalPointsDisplay--;
-    }
-    else if (this.pausePointsDisplay > 0) {
-      clear();
-      fill(255, 0, 255);
-      textAlign(CENTER, CENTER);
-      textSize(30);
-      text("Spinning...", width / 2, height / 2 - 100);
-      textSize(50);
-      text(this.perLetterPoints, width / 2, height / 2);
-      this.pausePointsDisplay--;
-
-      // We want to pause the display of the final points selected at the end of the spin cycle.
-      if (this.spinCount <= 0 && this.pausePointsDisplay <= 0) {
-        this.pauseFinalPointsDisplay = this.frameRate * 3;
-        playScoreSelectedSound();
-      }
-    }
-    else if (this.spinCount > 0) {
-      this.pausePointsDisplay = Math.ceil((this.spinCount * this.frameRate) / Math.pow(this.spinCount, 2));
-      this.perLetterPoints = Math.ceil(random(100, 500));
-      this.spinCount--;
-      playSpinSound(0.1);
-      print('pausepointsdisplay', this.pausePointsDisplay);
-    }
-    else if (this.phraseCompleteLoop > 0) {
-      clear();
-      fill(0, 255, 0);
-      textAlign(CENTER, CENTER);
-      textSize(30);
-      text(this.congratulationsPhrase, width / 2, height / 2 - 100);
-
-      textSize(70);
-      text(this.curPhrase.phrase, width / 2, height / 2);
-      this.phraseCompleteLoop--;
-      if (this.phraseCompleteLoop <= 0) {
-        // Increment the level and select a new phrase
-        this.level++;
-        this.selectRandomPhrase();
-      }
+    if (this.pauseUntilMilliSecond > millis()) {
+      // Do nothing - ie. pause rendering
     }
     else {
-      this.renderMainScreen();
+      switch (this.gameState()) {
+        case GameStates.GAME_OVER:
+          this.drawGameOver();
+          break;
+        case GameStates.SPINNING:
+          this.perLetterPoints = Math.ceil(random(100, 500));
+          playSpinSound(0.1);
+          let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 2));
+          this.pause(pauseMS);
+          
+          this.spinCount--;
+          if (this.spinCount == 0) this.drawFinalSpinPoints();
+          else this.drawSpinPoints();
+          break;
+        case GameStates.SOLVED:
+          this.drawSolvedMessage();
+          this.level++;
+          this.selectRandomPhrase();
+          this.pause(3000);
+          break;
+        default:
+          this.drawMainScreen();
+          break;
+      }
     }
   }
 
-  renderMainScreen() {
+  drawMainScreen() {
     clear();
     textAlign(LEFT, BOTTOM);
     textWrap(WORD);
@@ -115,6 +105,46 @@ class Game {
 
     text(`Points per letter: ${this.perLetterPoints}`, 100, 350);
     this.drawScore();
+  }
+
+  drawSpinPoints() {
+    clear();
+    fill(255, 0, 255);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    text("Spinning...", width / 2, height / 2 - 100);
+    textSize(50);
+    text(this.perLetterPoints, width / 2, height / 2);
+  }
+
+  drawFinalSpinPoints() {
+    clear();
+    fill(0, 255, 0);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    text("Done!", width / 2, height / 2 - 100);
+    textSize(70);
+    text(this.perLetterPoints, width / 2, height / 2);
+  }
+
+  drawSolvedMessage() {
+    clear();
+    fill(0, 255, 0);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    let message = random(["Way to go!", "Yes, you so good yo!", "I love you!", "Well done!"]);
+    text(message, width / 2, height / 2 - 100);
+
+    textSize(70);
+    text(this.curPhrase.phrase, width / 2, height / 2);
+  }
+
+  drawGameOver() {
+    clear();
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(70);
+    text("Game Over", width / 2 + random(2), height / 2 + random(2));
   }
 
   drawScore() {
@@ -173,10 +203,6 @@ class Game {
 
     // Check results for matches
     if (result.length > 0) {
-      if (this.isPhraseComplete()) {
-        this.phraseCompleteLoop = fr * 5;
-        this.congratulationsPhrase = random(["Way to go!", "Yes, you so good yo!", "I love you!", "Well done!"]);
-      }
       // we found a match
       //print("Found matches at indices", result);
     }
@@ -189,9 +215,5 @@ class Game {
       print("NO MATCH!");
       playIncorrectGuessSound();
     }
-  }
-
-  isPhraseComplete() {
-    return !this.guess.includes(this.noGuessChar);
   }
 }
