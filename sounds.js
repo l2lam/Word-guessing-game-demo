@@ -1,7 +1,7 @@
 //let synth;
 let synth = new p5.PolySynth();
-function playSpinSound() {
-  synth.play('C4', 0.5, 0, 1/8);
+function playSpinSound(durationSeconds) {
+  synth.play('C4', 0.5, 0, durationSeconds);
 }
 
 function playScoreSelectedSound() {

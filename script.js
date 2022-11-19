@@ -9,7 +9,7 @@ let phrases = [
 let game;
 
 // The frame rate
-const fr = 10;
+const fr = 30;
 
 function setup() {
   // Make the drawing canvase as big as the window

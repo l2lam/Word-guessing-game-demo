@@ -17,32 +17,37 @@ class Game {
   render() {
     // Score spinner display
     if (this.pauseFinalPointsDisplay > 0) {
-      fill(255, 0, 255);
-      rect(0, 0, 200, 200);
+      clear();
       fill(0, 255, 0);
+      textAlign(CENTER, CENTER);
+      textSize(30);
+      text("Done!", width/2, height/2 - 100);
       textSize(70);
-      text(this.perLetterPoints, 50, 100);
+      text(this.perLetterPoints, width/2, height/2);
       this.pauseFinalPointsDisplay--;
     }
     else if (this.pausePointsDisplay > 0) {
-      fill(0, 255, 0);
-      rect(0, 0, 200, 200);
+      clear();
       fill(255, 0, 255);
+      textAlign(CENTER, CENTER);
+      textSize(30);
+      text("Spinning...", width/2, height/2 - 100);
       textSize(50);
-      text(this.perLetterPoints, 50, 100);
+      text(this.perLetterPoints, width/2, height/2);
       this.pausePointsDisplay--;
 
       // We want to pause the display of the final points selected at the end of the spin cycle.
       if (this.spinCount <= 0 && this.pausePointsDisplay <= 0) {
-        this.pauseFinalPointsDisplay = fr * 5;
+        this.pauseFinalPointsDisplay = fr * 3;
         playScoreSelectedSound();
       }
     }
     else if (this.spinCount > 0) {
-      this.pausePointsDisplay = Math.ceil(fr / Math.pow(this.spinCount, 3));
+      this.pausePointsDisplay = Math.ceil((this.spinCount * fr) / Math.pow(this.spinCount, 2));
       this.perLetterPoints = Math.ceil(random(100, 500));
       this.spinCount--;
-      playSpinSound();
+      playSpinSound(0.1);
+      print('pausepointsdisplay', this.pausePointsDisplay);
     }
     else {
       this.renderMainScreen();
@@ -51,12 +56,14 @@ class Game {
 
   renderMainScreen() {
     clear();
+    textAlign(LEFT, BOTTOM);
+    textWrap(WORD);
     fill(0, 0, 0); // black
     textSize(50);
     //text(curPhrase, 100, 60);
     text(this.guess.join(" "), 100, 150);
 
-    textSize(30);
+    textSize(20);
     fill(255, 0, 0); // red
     text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 200);
 
