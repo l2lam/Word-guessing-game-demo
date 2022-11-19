@@ -13,6 +13,7 @@ class Game {
     this.level = 1;
     this.phrases = phrases;
     this.numPhrases = this.phrases.length;
+    this.congratulationsPhrase = "";
 
     this.selectRandomPhrase();
   }
@@ -69,7 +70,7 @@ class Game {
       fill(0, 255, 0);
       textAlign(CENTER, CENTER);
       textSize(30);
-      text("Yes, way to go!", width / 2, height / 2 - 100);
+      text(this.congratulationsPhrase, width / 2, height / 2 - 100);
 
       textSize(70);
       text(this.curPhrase.phrase, width / 2, height / 2);
@@ -93,9 +94,12 @@ class Game {
     // Show level
     fill(0, 0, 200); // black
     textSize(20);
-    text(`Level ${this.level}`, 100, 40);
+    text(`Level ${this.level} - ${this.curPhrase.category}`, 100, 40);
 
     // Show the puzzle
+    fill(0, 200, 200); // black
+    textSize(15);
+    text("Guess what's hidden!", 100, 80);
     fill(0, 0, 0); // black
     textSize(50);
     text(this.guess.join(" "), 100, 150);
@@ -104,8 +108,6 @@ class Game {
     textSize(20);
     fill(255, 0, 0); // red
     text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 200);
-
-    text(`Category: ${this.curPhrase.category}`, 100, 250);
 
     if (this.wrongGuesses.length > 1) {
       text(`Hint: ${this.curPhrase.hint}`, 100, 300);
@@ -173,6 +175,7 @@ class Game {
     if (result.length > 0) {
       if (this.isPhraseComplete()) {
         this.phraseCompleteLoop = fr * 5;
+        this.congratulationsPhrase = random(["Way to go!", "Yes, you so good yo!", "I love you!", "Well done!"]);
       }
       // we found a match
       //print("Found matches at indices", result);

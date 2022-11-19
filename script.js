@@ -1,9 +1,13 @@
+const ANIMAL = "Animal";
+const MATH = "Math";
+const RHYMES = "Rhymes";
+
 let phrases = [
-  new Phrase("fox in a box", "starts with f", "saying"),
-  new Phrase("dog", "woof!", "thing"),
-  new Phrase("cat", "meow!", "thing"),
-  //new Phrase("2 + 3 = 5", "math!", "addition"),
- // new Phrase("2 - 2 = 0", "math!", "addition"),
+  new Phrase("fox in a box", "starts with f", RHYMES),
+  new Phrase("dog", "woof!", ANIMAL),
+  new Phrase("cat", "meow!", ANIMAL),
+  new Phrase("2 + 3 = 5", "math!", MATH),
+  new Phrase("2 - 2 = 0", "math!", MATH),
 ];
 
 let game;
@@ -25,7 +29,7 @@ function setup() {
 }
 
 function startNewGame() {
-  game = new Game(phrases, '_', fr);
+  game = new Game(phrases, '▓', fr);
 }
 
 function draw() {
