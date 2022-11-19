@@ -103,7 +103,7 @@ class Game {
     // Show level
     fill(0, 0, 200); // black
     textSize(20);
-    text(`Level ${this.level} - ${this.curPhrase.category}`, 100, 40);
+    text(`Level ${this.level} - ${this.curPhrase.category}, You have ${this.score} points`, 100, 40);
 
     // Show the puzzle
     fill(0, 200, 200); // black
@@ -116,14 +116,13 @@ class Game {
     // Show the other information
     textSize(20);
     fill(255, 0, 0); // red
-    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 200);
+    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 250);
 
     if (this.wrongGuesses.length > 1) {
       text(`Hint: ${this.curPhrase.hint}`, 100, 300);
     }
 
     text(`Points per letter: ${this.perLetterPoints}`, 100, 350);
-    this.drawScore();
   }
 
   drawSpinPoints() {
@@ -164,11 +163,6 @@ class Game {
     textAlign(CENTER, CENTER);
     textSize(70);
     text("Game Over", width / 2 + random(2), height / 2 + random(2));
-  }
-
-  drawScore() {
-    fill(0, 0, 0); // black
-    text(`Total Score: ${this.score}`, 100, 400);
   }
 
   selectRandomPhrase() {
