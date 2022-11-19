@@ -20,8 +20,8 @@ Students who are being introduced to these computer programming concepts:
 Players try to guess the hidden phrase by guessing one letter/character at a time by typing the character on the keyboard.
 Special characters and their functions:
 
-- `F1` - Spin for points
 - `F2` - Restart the game
+- `F4` - Spin for points
 
 # Features
 

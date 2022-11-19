@@ -3,11 +3,11 @@ const MATH = "Math";
 const RHYMES = "Rhymes";
 
 let phrases = [
-  new Phrase("fox in a box", "starts with f", RHYMES),
+  //new Phrase("fox in a box", "starts with f", RHYMES),
   new Phrase("dog", "woof!", ANIMAL),
   new Phrase("cat", "meow!", ANIMAL),
-  new Phrase("2 + 3 = 5", "math!", MATH),
-  new Phrase("2 - 2 = 0", "math!", MATH),
+  //new Phrase("2 + 3 = 5", "math!", MATH),
+  //new Phrase("2 - 2 = 0", "math!", MATH),
 ];
 
 let game;
@@ -25,6 +25,7 @@ function setup() {
   // Set the frame rate
   frameRate(fr);
 
+  preLoadSoundFiles();
   startNewGame();
 }
 

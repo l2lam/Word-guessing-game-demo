@@ -1,11 +1,18 @@
 //let synth;
 let synth = new p5.PolySynth();
+let puzzleSolvedSound, gameOverSound;
+
+function preLoadSoundFiles() {
+  puzzleSolvedSound = loadSound('assets/goodresult-82807.mp3');
+  gameOverSound = loadSound('assets/10-seconds-loop-2-97528.mp3');
+}
+
 function playSpinSound(durationSeconds) {
   synth.play('C4', 0.5, 0, durationSeconds);
 }
 
 function playScoreSelectedSound() {
-  synth.play('C5', 0.8, 0, 1/2);
+  synth.play('C5', 0.8, 0, 1 / 2);
 }
 
 function playCorrectGuessSound() {
@@ -18,4 +25,14 @@ function playIncorrectGuessSound() {
   synth.play('C#5', 0.5, 0.3, 0.3);
   synth.play('C5', 0.5, 0.6, 0.3);
   synth.play('B5', 0.5, 0.9, 1.5);
+}
+
+function playPuzzleSolvedSound() {
+  if (!puzzleSolvedSound.isPlaying())
+    puzzleSolvedSound.play();
+}
+
+function playGameOverSound() {
+  if (!gameOverSound.isPlaying())
+    gameOverSound.play();
 }

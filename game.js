@@ -18,8 +18,8 @@ class Game {
     this.perLetterPoints = 100;
     this.spinCount = 0; // The number of times to spin for points
     this.level = 1; // The current level
-    this.phrases = phrases; // The total number of phrases in the game
-    this.numPhrases = this.phrases.length;
+    this.phrases = phrases.slice(); // Copy the original list of phrases 
+    this.numPhrases = this.phrases.length; // The total number of phrases in the game
     this.correctLetterIndices = [];
     this.pauseUntilMilliSecond = 0; // The # of ms since the program started to pause until
 
@@ -54,6 +54,7 @@ class Game {
       switch (this.gameState()) {
         case GameStates.GAME_OVER:
           this.drawGameOver();
+          playGameOverSound();
           break;
           
         case GameStates.SPINNING:
@@ -77,6 +78,7 @@ class Game {
           this.drawSolvedMessage();
           this.level++;
           this.selectRandomPhrase();
+          playPuzzleSolvedSound();
           this.pause(3000);
           break;
           
@@ -186,10 +188,10 @@ class Game {
 
   // React to an input character
   processKeyInput(keyPressed) {
-    if (keyPressed.match(/^[a-z0-9+-=]+$/i)) {
+    if (keyPressed.match(/^[a-z0-9+-=]$/i)) {
       this.processGuess(keyPressed);
     }
-    else if (keyPressed === 'F1') {
+    else if (keyPressed === 'F4') {
       //await spinForPoints();
       this.spinCount = Math.ceil(random(10, 50));
     }
