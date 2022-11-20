@@ -1,3 +1,6 @@
+const LINE_SPACING = 50;
+const MARGIN = 50;
+
 const GameStates = {
   GUESSING: "Guessing",
   CORRECT_GUESS: "A letter is guessed correctly",
@@ -114,31 +117,35 @@ class Game {
 
   drawMainScreen() {
     clear();
-    textAlign(LEFT, BOTTOM);
+    textAlign(LEFT, CENTER);
     textWrap(WORD);
 
     // Show level
-    fill(0, 0, 200); // black
+    fill(50, 50, 50);
+    rect(0, 0, width, LINE_SPACING * 2)
+    fill(150, 150, 200);
     textSize(20);
-    text(`Level ${this.level} - ${this.curPhrase.category}, ${this.score} points, ${this.livesRemaining} guesses left`, 100, 40);
+    text(`Level ${this.level} - ${this.curPhrase.category}, ${this.score} points, ${this.livesRemaining} guesses left`, MARGIN, LINE_SPACING);
 
     // Show the puzzle
     fill(0, 200, 200); // black
     textSize(15);
-    text("Guess what's hidden!", 100, 80);
+    text("Guess what's hidden!", MARGIN, LINE_SPACING * 3);
     fill(0, 0, 0); // black
     textSize(50);
-    text(this.guess.join(" "), 100, 150);
+    text(this.guess.join(" "), MARGIN, LINE_SPACING * 4);
 
     // Show the other information
+    fill(50, 50, 50);
+    rect(0, LINE_SPACING * 5, width, height);
     textSize(20);
     fill(255, 100, 100); // red
-    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 250);
+    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, MARGIN, LINE_SPACING * 6);
 
-    text(`Points per letter: ${this.perLetterPoints}`, 100, 300);
-    
-        if (this.wrongGuesses.length > 1) {
-      text(`Hint: ${this.curPhrase.hint}`, 100, 350);
+    text(`Points per letter: ${this.perLetterPoints}`, MARGIN, LINE_SPACING * 7);
+
+    if (this.wrongGuesses.length > 1) {
+      text(`Hint: ${this.curPhrase.hint}`, MARGIN, LINE_SPACING * 8);
     }
   }
 
