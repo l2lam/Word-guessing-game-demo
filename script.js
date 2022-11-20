@@ -30,7 +30,7 @@ function setup() {
 }
 
 function startNewGame() {
-  game = new Game(phrases, '▓', fr);
+  game = new Game(phrases, '▓', 5);
 }
 
 function draw() {

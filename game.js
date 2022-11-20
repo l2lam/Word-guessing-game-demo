@@ -1,15 +1,18 @@
 const GameStates = {
   GUESSING: "Guessing",
   CORRECT_GUESS: "A letter is guessed correctly",
+  INCORRECT_GUESS: "A letter is guessed incorrectly",
   GAME_OVER: "Game over",
+  PUZZLE_UNSSUCESSFUL: "Failed to complete the puzzle",
   SPINNING: "Spinning for points",
   SOLVED: "Puzzle solved",
 };
 
 class Game {
-  constructor(phrases, noGuessChar = '_', frameRate = 30) {
+  constructor(phrases, noGuessChar = '_', lives = 3) {
     this.noGuessChar = noGuessChar;
-    this.frameRate = frameRate;
+    this.livesPerRound = lives;
+    this.livesRemaining = 0;
     this.guess = [];
     this.wrongGuesses = [];
     this.score = 0;
@@ -19,9 +22,10 @@ class Game {
     this.phrases = phrases.slice(); // Copy the original list of phrases 
     this.numPhrases = this.phrases.length; // The total number of phrases in the game
     this.correctLetterIndices = [];
+    this.incorrectGuessChar = null;
     this.pauseUntilMilliSecond = 0; // The # of ms since the program started to pause until
 
-    this.selectRandomPhrase();
+    this.gotoNextLevel();
   }
 
   gameState() {
@@ -29,18 +33,13 @@ class Game {
     if (this.spinCount > 0) return GameStates.SPINNING;
     if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED;
     if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS;
+    if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS;
+    if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSSUCESSFUL;
     return GameStates.GUESSING;
   }
 
   pause(ms) {
     this.pauseUntilMilliSecond = millis() + ms;
-  }
-
-  isGameOver() {
-    return this.level > this.numPhrases;
-  }
-  isPhraseComplete() {
-    return !this.guess.includes(this.noGuessChar);
   }
 
   // Draw the game screen(s)
@@ -57,7 +56,7 @@ class Game {
 
         case GameStates.SPINNING:
           this.perLetterPoints = Math.ceil(random(100, 500));
-          let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 2));
+          let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 1.5));
 
           this.spinCount--;
           if (this.spinCount == 0) {
@@ -75,9 +74,27 @@ class Game {
         case GameStates.SOLVED:
           this.drawSolvedMessage();
           this.level++;
-          this.selectRandomPhrase();
+          this.gotoNextLevel();
           playPuzzleSolvedSound();
           this.pause(3000);
+          break;
+
+        case GameStates.PUZZLE_UNSSUCESSFUL:
+          this.drawFailedMessage();
+          playPuzzleFailedSound();
+          this.score = 0;
+          this.gotoNextLevel();
+          this.pause(3000);
+          break;
+
+        case GameStates.INCORRECT_GUESS:
+          this.drawIncorrectGuessMessage();
+          this.wrongGuesses.push(this.incorrectGuessChar);
+          this.score -= this.perLetterPoints;
+          this.livesRemaining--;
+          this.incorrectGuessChar = null;
+          playIncorrectGuessSound();
+          this.pause(1000);
           break;
 
         case GameStates.CORRECT_GUESS:
@@ -103,7 +120,7 @@ class Game {
     // Show level
     fill(0, 0, 200); // black
     textSize(20);
-    text(`Level ${this.level} - ${this.curPhrase.category}, You have ${this.score} points`, 100, 40);
+    text(`Level ${this.level} - ${this.curPhrase.category}, ${this.score} points, ${this.livesRemaining} guesses left`, 100, 40);
 
     // Show the puzzle
     fill(0, 200, 200); // black
@@ -115,46 +132,30 @@ class Game {
 
     // Show the other information
     textSize(20);
-    fill(255, 0, 0); // red
+    fill(255, 100, 100); // red
     text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, 100, 250);
 
-    if (this.wrongGuesses.length > 1) {
-      text(`Hint: ${this.curPhrase.hint}`, 100, 300);
+    text(`Points per letter: ${this.perLetterPoints}`, 100, 300);
+    
+        if (this.wrongGuesses.length > 1) {
+      text(`Hint: ${this.curPhrase.hint}`, 100, 350);
     }
-
-    text(`Points per letter: ${this.perLetterPoints}`, 100, 350);
   }
 
   drawSpinPoints() {
-    clear();
-    fill(255, 0, 255);
-    textAlign(CENTER, CENTER);
-    textSize(30);
-    text("Spinning...", width / 2, height / 2 - 100);
-    textSize(50);
-    text(this.perLetterPoints, width / 2, height / 2);
+    this.drawMessage("Spinning", this.perLetterPoints);
   }
 
   drawFinalSpinPoints() {
-    clear();
-    fill(0, 255, 0);
-    textAlign(CENTER, CENTER);
-    textSize(30);
-    text("Done!", width / 2, height / 2 - 100);
-    textSize(70);
-    text(this.perLetterPoints, width / 2, height / 2);
+    this.drawMessage("Done!", this.perLetterPoints);
   }
 
   drawSolvedMessage() {
-    clear();
-    fill(0, 255, 0);
-    textAlign(CENTER, CENTER);
-    textSize(30);
-    let message = random(["Way to go!", "Yes, you so good yo!", "I love you!", "Well done!"]);
-    text(message, width / 2, height / 2 - 100);
+    this.drawMessage(random(["Way to go!", "Yes, you so good yo!", "I love you!", "Well done!"]), this.curPhrase.phrase);
+  }
 
-    textSize(70);
-    text(this.curPhrase.phrase, width / 2, height / 2);
+  drawFailedMessage() {
+    this.drawMessage(random(["Too bad, so sad", "Nope, better luck next time!", "Booo!", "Nope, fail"]), this.curPhrase.phrase);
   }
 
   drawGameOver() {
@@ -165,7 +166,23 @@ class Game {
     text("Game Over", width / 2 + random(2), height / 2 + random(2));
   }
 
-  selectRandomPhrase() {
+  drawIncorrectGuessMessage() {
+    this.drawMessage("There is no...", this.incorrectGuessChar);
+  }
+
+  drawMessage(commentary, highlight) {
+    clear();
+    fill(0, 150, 150);
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    text(commentary, width / 2, height / 2 - 100);
+
+    textSize(70);
+    fill(255, 55, 55);
+    text(highlight, width / 2, height / 2);
+  }
+
+  gotoNextLevel() {
     if (this.phrases.length > 0) {
       // Choose a phrase at random from the phrase bank
       let phraseIndex = Math.floor(random(0, this.phrases.length));
@@ -176,6 +193,7 @@ class Game {
       // Initialize global game values
       this.guess = [];
       this.wrongGuesses = [];
+      this.livesRemaining = this.livesPerRound;
 
       // Fill the guess array with underscores corresponding to the phrase
       for (let i = 0; i < this.curPhrase.phrase.length; i++) {
@@ -205,7 +223,7 @@ class Game {
       if (phrase[i] === letter) {
         if (this.guess[i] === letter) {
           // Already guessed that!
-          playIncorrectGuessSound();
+          playDuplicateGuessSound();
           break;
         }
         else
@@ -216,14 +234,10 @@ class Game {
     // Check results for matches
     if (this.correctLetterIndices.length == 0) {
       if (this.wrongGuesses.includes(letter)) {
-        print("You already guessed that!");
-        playIncorrectGuessSound();
+        playDuplicateGuessSound();
       }
       else {
-        this.wrongGuesses.push(letter);
-        this.score -= this.perLetterPoints;
-        print("NO MATCH!");
-        playIncorrectGuessSound();
+        this.incorrectGuessChar = letter;
       }
     }
   }
