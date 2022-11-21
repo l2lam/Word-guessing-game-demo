@@ -12,7 +12,8 @@ const GameStates = {
 };
 
 class Game {
-  constructor(phrases, noGuessChar = '_', lives = 3) {
+  constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
+    this.bgImage = bgImage;
     this.noGuessChar = noGuessChar;
     this.livesPerRound = lives;
     this.livesRemaining = 0;
@@ -87,7 +88,7 @@ class Game {
           playPuzzleFailedSound();
           this.score = 0;
           this.gotoNextLevel();
-          this.pause(3000);
+          this.pause(5000);
           break;
 
         case GameStates.INCORRECT_GUESS:
@@ -97,7 +98,7 @@ class Game {
           this.livesRemaining--;
           this.incorrectGuessChar = null;
           playIncorrectGuessSound();
-          this.pause(1000);
+          this.pause(2000);
           break;
 
         case GameStates.CORRECT_GUESS:
@@ -115,38 +116,15 @@ class Game {
     }
   }
 
+  drawBackground() {
+    if (this.bgImage) background(this.bgImage, 100);
+  }
+
   drawMainScreen() {
-    clear();
-    textAlign(LEFT, CENTER);
-    textWrap(WORD);
-
-    // Show level
-    fill(50, 50, 50);
-    rect(0, 0, width, LINE_SPACING * 2)
-    fill(150, 150, 200);
-    textSize(20);
-    text(`Level ${this.level} - ${this.curPhrase.category}, ${this.score} points, ${this.livesRemaining} guesses left`, MARGIN, LINE_SPACING, width - 2 * MARGIN);
-
-    // Show the puzzle
-    fill(0, 200, 200); // black
-    textSize(15);
-    text("Guess what's hidden!", MARGIN, LINE_SPACING * 1.5, width - 2 * MARGIN);
-    fill(0, 0, 0); // black
-    textSize(50);
-    text(this.guess.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN);
-
-    // Show the other information
-    fill(50, 50, 50);
-    rect(0, LINE_SPACING * 6, width, height);
-    textSize(20);
-    fill(255, 100, 100); // red
-    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, MARGIN, LINE_SPACING * 7, width - 2 * MARGIN);
-
-    text(`Points per letter: ${this.perLetterPoints}`, MARGIN, LINE_SPACING * 8);
-
-    if (this.wrongGuesses.length > 1) {
-      text(`Hint: ${this.curPhrase.hint}`, MARGIN, LINE_SPACING * 9, width - 2 * MARGIN);
-    }
+    this.drawBackground();
+    this.drawTopBar();
+    this.drawPuzzle();
+    this.drawBottomBar();
   }
 
   drawSpinPoints() {
@@ -166,7 +144,7 @@ class Game {
   }
 
   drawGameOver() {
-    clear();
+    this.drawBackground();
     fill(255, 0, 0);
     textAlign(CENTER, CENTER);
     textSize(70);
@@ -178,7 +156,11 @@ class Game {
   }
 
   drawMessage(commentary, highlight) {
-    clear();
+    //this.drawBackground();
+
+    fill(50, 50, 50);
+    rect(MARGIN, height / 2 - LINE_SPACING * 4, width - MARGIN * 2, LINE_SPACING * 6, 70);
+
     fill(0, 150, 150);
     textAlign(CENTER, CENTER);
     textSize(30);
@@ -187,6 +169,78 @@ class Game {
     textSize(70);
     fill(255, 55, 55);
     text(highlight, width / 2, height / 2);
+  }
+
+  drawPuzzle() {
+    textAlign(LEFT, CENTER);
+    textWrap(WORD);
+    fill(0, 0, 0); // black
+    textSize(50);
+    text(this.guess.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN);    
+  }
+  
+  drawBottomBar() {
+    fill(50, 50, 50, 180);
+    rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70);
+    textSize(20);
+    fill(255, 100, 100); // red
+    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, MARGIN, LINE_SPACING * 7, width - 2 * MARGIN);
+
+    text(`Points per letter: ${this.perLetterPoints}`, MARGIN, LINE_SPACING * 8);
+
+    if (this.wrongGuesses.length > 1) {
+      text(`Hint: ${this.curPhrase.hint}`, MARGIN, LINE_SPACING * 9, width - 2 * MARGIN);
+    }
+  }
+
+  drawTopBar() {
+    // Show level, score, lives
+    fill(50, 50, 50, 180);
+    rect(5, 5, width - 10, LINE_SPACING * 2, 70);
+    this.drawLevel();
+    this.drawScore();
+    this.drawLivesRemaining();
+    this.drawInstructions();
+  }
+
+  drawInstructions() {
+    textAlign(CENTER, CENTER);
+    fill(0, 200, 200);
+    textSize(10);
+    text("Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game", width / 2, LINE_SPACING * 1.8);
+  }
+
+  drawLevel() {
+    textAlign(CENTER, CENTER);
+    fill(150, 150, 200);
+    textSize(10)
+    text("LEVEL", MARGIN * 2, LINE_SPACING - 25);
+    textSize(30);
+    fill(255, 255, 250);
+    strokeWeight(4);
+    text(this.level, MARGIN * 2, LINE_SPACING);
+  }
+
+  drawScore() {
+    textAlign(CENTER, CENTER);
+    fill(150, 150, 200);
+    textSize(10)
+    text("SCORE", width / 2, LINE_SPACING - 25);
+    textSize(30);
+    fill(255, 255, 250);
+    strokeWeight(4);
+    text(this.score, width / 2, LINE_SPACING);
+  }
+
+  drawLivesRemaining() {
+    textAlign(CENTER, CENTER);
+    fill(150, 150, 200);
+    textSize(10)
+    text("LIVES", width - MARGIN * 2, LINE_SPACING - 25);
+    textSize(30);
+    fill(255, 255, 250);
+    strokeWeight(4);
+    text(this.livesRemaining, width - MARGIN * 2, LINE_SPACING);
   }
 
   gotoNextLevel() {
