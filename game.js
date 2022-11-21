@@ -28,6 +28,7 @@ class Game {
     this.correctLetterIndices = [];
     this.incorrectGuessChar = null;
     this.pauseUntilMilliSecond = 0; // The # of ms since the program started to pause until
+    this.puzzleRevealCountdown = 0;
 
     this.gotoNextLevel();
   }
@@ -174,16 +175,24 @@ class Game {
   drawPuzzle() {
     textAlign(LEFT, CENTER);
     textWrap(WORD);
-    fill(0, 0, 0); // black
+    fill(0, 0, 0);
     textSize(50);
-    text(this.guess.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN);    
+    let puzzle = this.guess;
+    if (this.puzzleRevealCountdown > 0) {
+      puzzle = [];
+      this.guess.forEach((c, i) => puzzle.push(c === ' ' ? c : ['Ò', 'Ó', 'Ô', 'Õ', 'Ö'][(i + this.puzzleRevealCountdown) % 5]));
+      this.puzzleRevealCountdown--;
+      playNewPuzzleSound();
+      //this.pause(100);
+    }
+    text(puzzle.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN);
   }
-  
+
   drawBottomBar() {
     fill(50, 50, 50, 180);
     rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70);
     textSize(20);
-    fill(255, 100, 100); // red
+    fill(255, 100, 100);
     text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, MARGIN, LINE_SPACING * 7, width - 2 * MARGIN);
 
     text(`Points per letter: ${this.perLetterPoints}`, MARGIN, LINE_SPACING * 8);
@@ -260,6 +269,7 @@ class Game {
       for (let i = 0; i < this.curPhrase.phrase.length; i++) {
         this.guess.push(this.curPhrase.phrase[i] == " " ? " " : this.noGuessChar);
       }
+      this.puzzleRevealCountdown = this.curPhrase.phrase.length;
     }
   }
 

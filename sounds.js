@@ -1,8 +1,9 @@
 //let synth;
 let synth = new p5.PolySynth();
-let puzzleSolvedSound, puzzleFailedSound, gameOverSound;
+let newPuzzleSound, puzzleSolvedSound, puzzleFailedSound, gameOverSound;
 
 function preLoadSoundFiles() {
+  newPuzzleSound = loadSound('assets/positive-logo-opener-13622.mp3');
   puzzleSolvedSound = loadSound('assets/goodresult-82807.mp3');
   puzzleFailedSound = loadSound('assets/wah-wah-sad-trombone-6347.mp3');
   gameOverSound = loadSound('assets/10-seconds-loop-2-97528.mp3');
@@ -30,6 +31,11 @@ function playIncorrectGuessSound() {
   synth.play('C#5', 0.5, 0.3, 0.3);
   synth.play('C5', 0.5, 0.6, 0.3);
   synth.play('B5', 0.5, 0.9, 1.5);
+}
+
+function playNewPuzzleSound() {
+  if (!newPuzzleSound.isPlaying())
+    newPuzzleSound.play();
 }
 
 function playPuzzleSolvedSound() {

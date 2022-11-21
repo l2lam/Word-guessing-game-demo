@@ -31,7 +31,7 @@ Special characters and their functions:
 - [x] Scoring/points scheme
 - [x] Points selection scheme
 - [x] Sound effects
-- [ ] Penalties scheme
+- [x] Penalties scheme
 - [ ] Game modes
   - [x] General mode
   - [ ] Grade One mode
