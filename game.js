@@ -165,11 +165,11 @@ class Game {
     fill(0, 150, 150);
     textAlign(CENTER, CENTER);
     textSize(30);
-    text(commentary, width / 2, height / 2 - 100);
+    text(commentary, MARGIN, height / 2 - 100, width - 2 * MARGIN);
 
     textSize(70);
     fill(255, 55, 55);
-    text(highlight, width / 2, height / 2);
+    text(highlight, MARGIN, height / 2, width - 2 * MARGIN);
   }
 
   drawPuzzle() {
@@ -189,16 +189,17 @@ class Game {
   }
 
   drawBottomBar() {
+    this.drawInstructions();
     fill(50, 50, 50, 180);
     rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70);
     textSize(20);
     fill(255, 100, 100);
-    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, MARGIN, LINE_SPACING * 7, width - 2 * MARGIN);
+    text(`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(" ")}`, width/2, LINE_SPACING * 8);
 
-    text(`Points per letter: ${this.perLetterPoints}`, MARGIN, LINE_SPACING * 8);
+    text(`Points per letter: ${this.perLetterPoints}`, width/2, LINE_SPACING * 9);
 
     if (this.wrongGuesses.length > 1) {
-      text(`Hint: ${this.curPhrase.hint}`, MARGIN, LINE_SPACING * 9, width - 2 * MARGIN);
+      text(`Hint: ${this.curPhrase.hint}`, width/2, LINE_SPACING * 10);
     }
   }
 
@@ -209,16 +210,23 @@ class Game {
     this.drawLevel();
     this.drawScore();
     this.drawLivesRemaining();
-    this.drawInstructions();
+    this.drawCategory();
   }
 
   drawInstructions() {
     textAlign(CENTER, CENTER);
     fill(0, 200, 200);
-    textSize(10);
-    text("Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game", width / 2, LINE_SPACING * 1.8);
+    textSize(15);
+    text("Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game", width / 2, LINE_SPACING * 6.5);
   }
 
+  drawCategory() {
+    textAlign(CENTER, CENTER);
+    fill(0, 200, 200);
+    textSize(20);
+    text(this.curPhrase.category, width / 2, LINE_SPACING * 1.7);    
+  }
+  
   drawLevel() {
     textAlign(CENTER, CENTER);
     fill(150, 150, 200);
@@ -246,10 +254,10 @@ class Game {
     fill(150, 150, 200);
     textSize(10)
     text("LIVES", width - MARGIN * 2, LINE_SPACING - 25);
-    textSize(30);
-    fill(255, 255, 250);
+    textSize(32);
+    fill(255, 30, 30);
     strokeWeight(4);
-    text(this.livesRemaining, width - MARGIN * 2, LINE_SPACING);
+    text("❤️".repeat(this.livesRemaining), width - MARGIN * 2, LINE_SPACING);
   }
 
   gotoNextLevel() {
