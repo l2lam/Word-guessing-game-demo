@@ -13,7 +13,22 @@ Students who are being introduced to these computer programming concepts:
 
 # Game design and psuedocode
 
-<TODO>
+## Overview
+- There are `n` phrases to choose from
+- The game ends when all the phrases have been played
+- Phrases are choosen at random in each round (level), without repeating
+- Phrases can be a `word`, `phrase`, `equation`
+- One player only
+- Player guesses one letter/character at a time
+- Player starts with `k` lives per level/puzzle
+- A life is lost everytime an incorrect character is guessed
+- When all lives are lost, the level is considered unsuccessful and the game moves to the next puzzle
+  
+## Scoring
+- A per-character score is awarded to each correct letter/character guessed
+- A per-character score is deducted from the score for each incorrect letter/character guessed
+- When a level is unsuccessful, the score is reset to zero
+- Player can spin for a new (random) per-character score before each guess
 
 # How to play the game
 
