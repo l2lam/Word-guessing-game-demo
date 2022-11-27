@@ -39,7 +39,7 @@ function setup() {
 }
 
 function startNewGame() {
-  game = new Game(phrases, '▓', 5, bgImage);
+  game = new Game(phrases, '☠️', 5, bgImage);
 }
 
 function draw() {

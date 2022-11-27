@@ -42,11 +42,17 @@ Special characters and their functions:
 
 - [x] Basic phrase guessing, revealing correct guesses
 - [x] Game over state
+  - [ ] End game when too many penalties
 - [x] Levels scheme
+  - [ ] Rewards for points milestones
 - [x] Scoring/points scheme
 - [x] Points selection scheme
 - [x] Sound effects
 - [x] Penalties scheme
+  - [ ] Unlucky spin penalties
 - [ ] Game modes
   - [x] General mode
   - [ ] Grade One mode
+  - [ ] Unlockable hidden mode
+  - [ ] Multi-player mode
+- [ ] Touchscreen-only support
