@@ -284,7 +284,7 @@ class Game {
   // React to an input character
   processKeyInput(keyPressed) {
     if (this.gameState() == GameStates.GUESSING) {
-      if (keyPressed.match(/^[a-z0-9+-=]$/i)) {
+      if (keyPressed.match(/^[a-z0-9+-=?']$/i)) {
         this.processGuess(keyPressed);
       }
       else if (keyPressed === 'F4') {
