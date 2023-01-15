@@ -12,8 +12,7 @@ const GameStates = {
 };
 
 class Game {
-  constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
-    this.bgImage = bgImage;
+  constructor(phrases, noGuessChar = '_', lives = 3) {
     this.noGuessChar = noGuessChar;
     this.livesPerRound = lives;
     this.livesRemaining = 0;
@@ -117,12 +116,7 @@ class Game {
     }
   }
 
-  drawBackground() {
-    if (this.bgImage) background(this.bgImage, 100);
-  }
-
   drawMainScreen() {
-    this.drawBackground();
     this.drawTopBar();
     this.drawPuzzle();
     this.drawBottomBar();
