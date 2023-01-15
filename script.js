@@ -1,4 +1,4 @@
-let modes, currentModeIndex
+let modes, currentMode
 let game
 let bgImage
 
@@ -9,14 +9,8 @@ const fr = 10
 // that may take a little while to finish
 function preload() {
 	modes = [
-		new GameMode('Grade One', '', loadImage('assets/candy.jpg'), () => {
-			let game = new Game(gradeOnePhrases, '🍪', 5)
-			game.render()
-		}),
-		new GameMode('Grade Ten+', '', loadImage('assets/candy.jpg'), () => {
-			let game = new Game(standardPhrases, '_', 3)
-			game.render()
-		}),
+		new GameMode('Grade One', '', loadImage('assets/candy.jpg'), new Game(gradeOnePhrases, '🍪', 5)),
+		new GameMode('Grade Ten+', '', loadImage('assets/candy.jpg'), new Game(standardPhrases, '_', 3)),
 	]
 	preLoadSoundFiles()
 }
@@ -24,6 +18,7 @@ function preload() {
 const SELECT_MODE_STATE = 0
 const PLAY_STATE = 1
 let state = SELECT_MODE_STATE
+let modeSelectButtons = [];
 
 function setup() {
 	// Make the drawing canvase as big as the window
@@ -31,6 +26,25 @@ function setup() {
 
 	// Set the frame rate
 	frameRate(fr)
+
+  // Create mode select buttons;
+	// Create buttons for mode selection
+	for (let i = 0; i < modes.length; i++) {
+		let mode = modes[i]
+		let button = createButton(mode.name)
+		button.size(BUTTON_WIDTH, BUTTON_HEIGHT)
+		button.position(
+			(width - BUTTON_WIDTH) / 2,
+			(height - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
+		)
+		button.mousePressed(() => {
+			currentMode = modes[i];
+      modeSelectButtons.forEach(b => b.hide());
+      state = PLAY_STATE
+		})
+    //button.hide();
+    modeSelectButtons.push(button);
+	}  
 }
 
 function draw() {
@@ -39,34 +53,22 @@ function draw() {
 			selectMode()
 			break
 		case PLAY_STATE:
-			modes[currentModeIndex].run()
+			currentMode.run()
 			break
 	}
-	currentMode.run()
 }
 
 const BUTTON_WIDTH = 100
 const BUTTON_HEIGHT = 70
 const BUTTON_GAP = 20
 function selectMode() {
-	// Create buttons for mode selection
-	for (let i = 0; i < modes.length; i++) {
-		let mode = modes[i]
-		let button = createButton(mode.name, i)
-		button.size(BUTTON_WIDTH, BUTTON_HEIGHT)
-		button.position(
-			(width - BUTTON_WIDTH) / 2,
-			(height + BUTTON_HEIGHT + BUTTON_GAP * (modes.length - i)) / 2
-		)
-		button.mousePressed(() => {
-			currentModeIndex = this.value()
-		})
-	}
+  //print(modeSelectButtons);
+  modeSelectButtons.forEach(b => b.show());
 }
 
 function keyPressed() {
 	// Allow the user to reset the game via a special button
 	if (key === 'F2') state = SELECT_MODE_STATE
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
-	else if (key !== 'Shift') game.processKeyInput(key)
+	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
