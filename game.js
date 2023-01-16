@@ -1,6 +1,3 @@
-const LINE_SPACING = 50
-const MARGIN = 50
-
 const GameStates = {
 	GUESSING: 'Guessing',
 	CORRECT_GUESS: 'A letter is guessed correctly',

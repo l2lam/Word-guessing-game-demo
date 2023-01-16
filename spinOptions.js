@@ -13,6 +13,11 @@ class SpinOption {
 		return currentScore
 	}
 
+	// Display the value that represents this spin option
+	displaySpinValue() {
+		drawMessage('Spinning', this.perLetterScore)
+	}
+
 	// Displays the final result and returns true if end of sequence (milliseconds)
 	displayResult(sequenceMS, currentScore) {
 		drawMessage(`New Per-Letter Score`, this.perLetterScore)
@@ -25,10 +30,16 @@ const BANKRUPT_PHASE2_MS = 5000
 class BankruptSpinOption extends SpinOption {
 	constructor(perLetterScore) {
 		super(perLetterScore)
+		//this.image = loadImage('asset/')
+		this.image = random(['💩', '☠️', '😵', '👼'])
 	}
 
 	newScore(currentScore) {
-		return 0
+		return 0 // wipe out all the score!
+	}
+
+	displaySpinValue() {
+		drawMessage('Spinning', this.image)
 	}
 
 	displayResult(sequenceMS, currentScore) {

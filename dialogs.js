@@ -1,4 +1,7 @@
-function drawMessage(commentary, highlight) {
+const LINE_SPACING = 50
+const MARGIN = 50
+
+function drawMessage(commentary, highlight, highlightImage) {
 	//this.drawBackground();
 
 	fill(50, 50, 50)
@@ -9,7 +12,11 @@ function drawMessage(commentary, highlight) {
 	textSize(30)
 	text(commentary, MARGIN, height / 2 - 100, width - 2 * MARGIN)
 
-	textSize(70)
-	fill(255, 55, 55)
-	text(highlight, MARGIN, height / 2, width - 2 * MARGIN)
+	if (highlightImage) {
+		image(highlightImage, MARGIN, height / 2, width - 2 * MARGIN)
+	} else {
+		textSize(70)
+		fill(255, 55, 55)
+		text(highlight, MARGIN, height / 2, width - 2 * MARGIN)
+	}
 }
