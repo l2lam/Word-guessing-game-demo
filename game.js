@@ -127,23 +127,23 @@ class Game {
 	}
 
 	drawSpinPoints() {
-		this.drawMessage('Spinning', this.perLetterPoints)
+		drawMessage('Spinning', this.perLetterPoints)
 	}
 
 	drawFinalSpinPoints() {
-		this.drawMessage('Done!', this.perLetterPoints)
+		drawMessage('Done!', this.perLetterPoints)
 	}
 
 	drawSolvedMessage() {
-		this.drawMessage(
-			random(['Way to go!', 'Yes, you so good yo!', 'I love you!', 'Well done!']),
+		drawMessage(
+			random(['Way to go!', 'Awesome', 'Wonderful', 'Yes, you so good yo!', 'I love you!', 'Well done!']),
 			this.curPhrase.phrase
 		)
 	}
 
 	drawFailedMessage() {
-		this.drawMessage(
-			random(['Too bad, so sad', 'Nope, better luck next time!', 'Booo!', 'Nope, fail']),
+		drawMessage(
+			random(['Too bad, so sad', 'Nope, better luck next time!', 'Booo!', 'Nope, fail', 'Oh poop']),
 			this.curPhrase.phrase
 		)
 	}
@@ -157,23 +157,7 @@ class Game {
 	}
 
 	drawIncorrectGuessMessage() {
-		this.drawMessage('There is no...', this.incorrectGuessChar)
-	}
-
-	drawMessage(commentary, highlight) {
-		//this.drawBackground();
-
-		fill(50, 50, 50)
-		rect(MARGIN, height / 2 - LINE_SPACING * 4, width - MARGIN * 2, LINE_SPACING * 6, 70)
-
-		fill(0, 150, 150)
-		textAlign(CENTER, CENTER)
-		textSize(30)
-		text(commentary, MARGIN, height / 2 - 100, width - 2 * MARGIN)
-
-		textSize(70)
-		fill(255, 55, 55)
-		text(highlight, MARGIN, height / 2, width - 2 * MARGIN)
+		drawMessage('There is no...', this.incorrectGuessChar)
 	}
 
 	drawPuzzle() {
