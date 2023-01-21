@@ -3,11 +3,6 @@ class SpinOption {
 		this.perLetterScore = perLetterScore
 	}
 
-	// Returns the new per-letter score
-	newPerLetterScore(currentPerLetterScore) {
-		return this.perLetterScore
-	}
-
 	// Returns a modified score based on the current score
 	newScore(currentScore) {
 		return currentScore
@@ -16,17 +11,19 @@ class SpinOption {
 	// Display the value that represents this spin option
 	displaySpinValue() {
 		drawMessage('Spinning', this.perLetterScore)
+		playSpinSound(0.1)
 	}
 
 	// Displays the final result and returns true if end of sequence (milliseconds)
 	displayResult(sequenceMS, currentScore) {
+		if (sequenceMS < 1000) playScoreSelectedSound()
 		drawMessage(`New Per-Letter Score`, this.perLetterScore)
 		return sequenceMS > 3000
 	}
 }
 
-const BANKRUPT_PHASE1_MS = 1500
-const BANKRUPT_PHASE2_MS = 5000
+const BANKRUPT_PHASE1_MS = 3000
+const BANKRUPT_PHASE2_MS = 6000
 class BankruptSpinOption extends SpinOption {
 	constructor(perLetterScore) {
 		super(perLetterScore)
@@ -40,18 +37,15 @@ class BankruptSpinOption extends SpinOption {
 
 	displaySpinValue() {
 		drawMessage('Spinning', this.image)
+		playSpinSound(0.1)
 	}
 
 	displayResult(sequenceMS, currentScore) {
-		if (sequenceMS < BANKRUPT_PHASE1_MS) drawMessage('Oh Nooose', currentScore)
-		else if (sequenceMS < BANKRUPT_PHASE2_MS) {
-			drawMessage(
-				'Your Score',
-				Math.ceil(
-					currentScore -
-						(currentScore / (BANKRUPT_PHASE2_MS - BANKRUPT_PHASE1_MS)) * (sequenceMS - BANKRUPT_PHASE1_MS)
-				)
-			)
+		if (sequenceMS < 1000) playIncorrectGuessSound()
+		if (sequenceMS < BANKRUPT_PHASE1_MS) {
+			drawMessage('Oh Noooose...', this.image)
+		} else if (sequenceMS < BANKRUPT_PHASE2_MS) {
+			drawMessage('Your Score', 0)
 		}
 		return sequenceMS > BANKRUPT_PHASE2_MS
 	}

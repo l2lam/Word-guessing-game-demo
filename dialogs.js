@@ -9,13 +9,13 @@ function drawMessage(commentary, highlight, highlightImage) {
 
 	fill(0, 150, 150)
 	textAlign(CENTER, CENTER)
-	textSize(30)
+	textSize(40)
 	text(commentary, MARGIN, height / 2 - 100, width - 2 * MARGIN)
 
 	if (highlightImage) {
 		image(highlightImage, MARGIN, height / 2, width - 2 * MARGIN)
 	} else {
-		textSize(70)
+		textSize(90)
 		fill(255, 55, 55)
 		text(highlight, MARGIN, height / 2, width - 2 * MARGIN)
 	}
