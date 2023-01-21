@@ -1,13 +1,11 @@
-const LINE_SPACING = 50
-const MARGIN = 50
-
 const GameStates = {
 	GUESSING: 'Guessing',
 	CORRECT_GUESS: 'A letter is guessed correctly',
 	INCORRECT_GUESS: 'A letter is guessed incorrectly',
 	GAME_OVER: 'Game over',
-	PUZZLE_UNSSUCESSFUL: 'Failed to complete the puzzle',
+	PUZZLE_UNSUCCESSFUL: 'Failed to complete the puzzle',
 	SPINNING: 'Spinning for points',
+	SPINNING_FINISHED: 'Spinning completed',
 	SOLVED: 'Puzzle solved',
 }
 
@@ -20,8 +18,9 @@ class Game {
 		this.guess = []
 		this.wrongGuesses = []
 		this.score = 0
-		this.perLetterPoints = 100
+		this.currentSpinOption = new SpinOption(100)
 		this.spinCount = 0 // The number of times to spin for points
+		this.spinResultSequence = 0
 		this.level = 1 // The current level
 		this.phrases = phrases.slice() // Copy the original list of phrases
 		this.numPhrases = this.phrases.length // The total number of phrases in the game
@@ -29,6 +28,14 @@ class Game {
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
+		this.spinOptions = [
+			new SpinOption(100),
+			new SpinOption(200),
+			new SpinOption(300),
+			new SpinOption(500),
+			new SpinOption(1000),
+			new BankruptSpinOption(100),
+		]
 
 		this.gotoNextLevel()
 	}
@@ -36,10 +43,11 @@ class Game {
 	gameState() {
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
+		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
 		if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
-		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSSUCESSFUL
+		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
 		return GameStates.GUESSING
 	}
 
@@ -59,19 +67,24 @@ class Game {
 					break
 
 				case GameStates.SPINNING:
-					this.perLetterPoints = Math.ceil(random(100, 500))
-					let pauseMS = Math.ceil((this.spinCount * 500) / Math.pow(this.spinCount, 1.5))
+					let option = random(this.spinOptions)
+					let pauseMS = Math.ceil((this.spinCount * 400) / Math.pow(this.spinCount, 1.5))
 
 					this.spinCount--
 					if (this.spinCount == 0) {
-						this.drawFinalSpinPoints()
-						pauseMS = 3000
-						playScoreSelectedSound()
+						this.currentSpinOption = option
+						this.spinResultSequence = millis() // Start the spin-finished process
 					} else {
-						this.drawSpinPoints()
-						playSpinSound(0.1)
+						option.displaySpinValue()
 					}
 					this.pause(pauseMS)
+					break
+
+				case GameStates.SPINNING_FINISHED:
+					if (this.currentSpinOption.displayResult(millis() - this.spinResultSequence, this.score)) {
+						this.spinResultSequence = 0
+						this.score = this.currentSpinOption.newScore(this.score)
+					} else this.pause(100)
 					break
 
 				case GameStates.SOLVED:
@@ -82,7 +95,7 @@ class Game {
 					this.pause(3000)
 					break
 
-				case GameStates.PUZZLE_UNSSUCESSFUL:
+				case GameStates.PUZZLE_UNSUCCESSFUL:
 					this.drawFailedMessage()
 					playPuzzleFailedSound()
 					this.score = 0
@@ -93,7 +106,6 @@ class Game {
 				case GameStates.INCORRECT_GUESS:
 					this.drawIncorrectGuessMessage()
 					this.wrongGuesses.push(this.incorrectGuessChar)
-					this.score -= this.perLetterPoints
 					this.livesRemaining--
 					this.incorrectGuessChar = null
 					playIncorrectGuessSound()
@@ -103,7 +115,7 @@ class Game {
 				case GameStates.CORRECT_GUESS:
 					let index = this.correctLetterIndices.shift()
 					this.guess[index] = this.curPhrase.phrase[index]
-					this.score += this.perLetterPoints
+					this.score += this.currentSpinOption.perLetterScore
 					playCorrectGuessSound()
 					this.pause(1000)
 				// Intentionally pass through to draw the main screen.
@@ -126,24 +138,16 @@ class Game {
 		this.drawBottomBar()
 	}
 
-	drawSpinPoints() {
-		this.drawMessage('Spinning', this.perLetterPoints)
-	}
-
-	drawFinalSpinPoints() {
-		this.drawMessage('Done!', this.perLetterPoints)
-	}
-
 	drawSolvedMessage() {
-		this.drawMessage(
-			random(['Way to go!', 'Yes, you so good yo!', 'I love you!', 'Well done!']),
+		drawMessage(
+			random(['Way to go!', 'Awesome', 'Wonderful', 'Yes, you so good yo!', 'I love you!', 'Well done!']),
 			this.curPhrase.phrase
 		)
 	}
 
 	drawFailedMessage() {
-		this.drawMessage(
-			random(['Too bad, so sad', 'Nope, better luck next time!', 'Booo!', 'Nope, fail']),
+		drawMessage(
+			random(['Too bad, so sad', 'Nope, better luck next time!', 'Booo!', 'Nope, fail', 'Oh poop']),
 			this.curPhrase.phrase
 		)
 	}
@@ -157,23 +161,7 @@ class Game {
 	}
 
 	drawIncorrectGuessMessage() {
-		this.drawMessage('There is no...', this.incorrectGuessChar)
-	}
-
-	drawMessage(commentary, highlight) {
-		//this.drawBackground();
-
-		fill(50, 50, 50)
-		rect(MARGIN, height / 2 - LINE_SPACING * 4, width - MARGIN * 2, LINE_SPACING * 6, 70)
-
-		fill(0, 150, 150)
-		textAlign(CENTER, CENTER)
-		textSize(30)
-		text(commentary, MARGIN, height / 2 - 100, width - 2 * MARGIN)
-
-		textSize(70)
-		fill(255, 55, 55)
-		text(highlight, MARGIN, height / 2, width - 2 * MARGIN)
+		drawMessage('There is no...', this.incorrectGuessChar)
 	}
 
 	drawPuzzle() {
@@ -206,7 +194,7 @@ class Game {
 			LINE_SPACING * 8
 		)
 
-		text(`Points per letter: ${this.perLetterPoints}`, width / 2, LINE_SPACING * 9)
+		text(`Points per letter: ${this.currentSpinOption.perLetterScore}`, width / 2, LINE_SPACING * 9)
 
 		if (this.wrongGuesses.length > 1) {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
@@ -302,7 +290,7 @@ class Game {
 				this.processGuess(keyPressed)
 			} else if (keyPressed === 'F4') {
 				//await spinForPoints();
-				this.spinCount = Math.ceil(random(10, 50))
+				this.spinCount = Math.ceil(random(30, 60))
 			}
 		}
 	}
