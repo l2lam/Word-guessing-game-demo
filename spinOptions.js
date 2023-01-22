@@ -25,10 +25,10 @@ class SpinOption {
 const BANKRUPT_PHASE1_MS = 3000
 const BANKRUPT_PHASE2_MS = 6000
 class BankruptSpinOption extends SpinOption {
-	constructor(perLetterScore) {
+	constructor(name, perLetterScore) {
 		super(perLetterScore)
-		//this.image = loadImage('asset/')
-		this.image = random(['💩', '☠️', '😵', '👼'])
+		this.name = name
+		// this.image = random(['💩', '☠️', '😵', '👼'])
 	}
 
 	newScore(currentScore) {

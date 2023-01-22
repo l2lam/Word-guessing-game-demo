@@ -23,7 +23,7 @@ class Game {
 		this.currentSpinOption = defaultSpinOption
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
-		this.level = 1 // The current level
+		this.level = 0 // The current level
 		this.phrases = phrases.slice() // Copy the original list of phrases
 		this.numPhrases = this.phrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
@@ -36,7 +36,7 @@ class Game {
 			new SpinOption(300),
 			new SpinOption(500),
 			new SpinOption(1000),
-			new BankruptSpinOption(defaultSpinOption.perlLetterScore),
+			new BankruptSpinOption('💩 Poop 💩', defaultSpinOption.perlLetterScore),
 		]
 
 		this.gotoNextLevel()
@@ -91,7 +91,6 @@ class Game {
 
 				case GameStates.SOLVED:
 					this.drawSolvedMessage()
-					this.level++
 					this.gotoNextLevel()
 					playPuzzleSolvedSound()
 					this.pause(3000)
@@ -266,6 +265,19 @@ class Game {
 
 	gotoNextLevel() {
 		if (this.phrases.length > 0) {
+			this.level++
+
+			// Increase spin options
+			if (this.level > 1) {
+				this.spinOptions.push(new SpinOption(this.level * 1000))
+				this.spinOptions.push(
+					new BankruptSpinOption(
+						random(['😵 Wammy 😵', '☠ Skull ☠', '💣 Bomb 💣']),
+						defaultSpinOption.perlrLetterScore
+					)
+				)
+			}
+
 			// Choose a phrase at random from the phrase bank
 			let phraseIndex = Math.floor(random(0, this.phrases.length))
 			this.curPhrase = this.phrases[phraseIndex]
