@@ -9,6 +9,8 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
+let defaultSpinOption = new SpinOption(100)
+
 class Game {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		this.bgImage = bgImage
@@ -18,7 +20,7 @@ class Game {
 		this.guess = []
 		this.wrongGuesses = []
 		this.score = 0
-		this.currentSpinOption = new SpinOption(100)
+		this.currentSpinOption = defaultSpinOption
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 1 // The current level
@@ -34,7 +36,7 @@ class Game {
 			new SpinOption(300),
 			new SpinOption(500),
 			new SpinOption(1000),
-			new BankruptSpinOption(100),
+			new BankruptSpinOption(defaultSpinOption.perlLetterScore),
 		]
 
 		this.gotoNextLevel()

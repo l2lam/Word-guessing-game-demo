@@ -50,3 +50,14 @@ class BankruptSpinOption extends SpinOption {
 		return sequenceMS > BANKRUPT_PHASE2_MS
 	}
 }
+
+class LooseTurnSpinOption extends SpinOption {
+	constructor() {
+		super(0) // A per letter score indicates loose your turn
+	}
+
+	displaySpinValue() {
+		drawMessage('Spinning', 'Lose Turn')
+		playSpinSound(0.1)
+	}
+}
