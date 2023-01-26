@@ -12,14 +12,12 @@ const GameStates = {
 let defaultSpinOption = new SpinOption(100)
 
 class Game {
-	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
+	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null, players = []) {
 		this.bgImage = bgImage
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
-		this.livesRemaining = 0
 		this.guess = []
 		this.wrongGuesses = []
-		this.score = 0
 		this.currentSpinOption = defaultSpinOption
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
@@ -38,6 +36,10 @@ class Game {
 			new SpinOption(1000),
 			new BankruptSpinOption('💩 Poop 💩', defaultSpinOption.perlLetterScore),
 		]
+    this.players = players;
+    if (this.players.length < 1) 
+      this.players.push(new Player('Dude', this.livesPerRound))
+    this.currentPlayer = this.players[0];
 
 		this.gotoNextLevel()
 	}
@@ -49,7 +51,7 @@ class Game {
 		if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
-		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
+		if (this.currentPlayer.lives <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
 		return GameStates.GUESSING
 	}
 
@@ -83,9 +85,9 @@ class Game {
 					break
 
 				case GameStates.SPINNING_FINISHED:
-					if (this.currentSpinOption.displayResult(millis() - this.spinResultSequence, this.score)) {
+					if (this.currentSpinOption.displayResult(millis() - this.spinResultSequence, this.currentPlayer.score)) {
 						this.spinResultSequence = 0
-						this.score = this.currentSpinOption.newScore(this.score)
+						this.currentPlayer.score = this.currentSpinOption.newScore(this.currentPlayer.score)
 					} else this.pause(100)
 					break
 
@@ -99,7 +101,7 @@ class Game {
 				case GameStates.PUZZLE_UNSUCCESSFUL:
 					this.drawFailedMessage()
 					playPuzzleFailedSound()
-					this.score = 0
+					this.currentPlayer.score = 0
 					this.gotoNextLevel()
 					this.pause(5000)
 					break
@@ -107,7 +109,7 @@ class Game {
 				case GameStates.INCORRECT_GUESS:
 					this.drawIncorrectGuessMessage()
 					this.wrongGuesses.push(this.incorrectGuessChar)
-					this.livesRemaining--
+					this.currentPlayer.lives--
 					this.incorrectGuessChar = null
 					playIncorrectGuessSound()
 					this.pause(2000)
@@ -116,7 +118,7 @@ class Game {
 				case GameStates.CORRECT_GUESS:
 					let index = this.correctLetterIndices.shift()
 					this.guess[index] = this.curPhrase.phrase[index]
-					this.score += this.currentSpinOption.perLetterScore
+					this.currentPlayer.score += this.currentSpinOption.perLetterScore
 					playCorrectGuessSound()
 					this.pause(1000)
 				// Intentionally pass through to draw the main screen.
@@ -245,11 +247,11 @@ class Game {
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
-		text('SCORE', width / 2, LINE_SPACING - 25)
+		text(this.currentPlayer.name || 'SCORE', width / 2, LINE_SPACING - 25)
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		text(this.score, width / 2, LINE_SPACING)
+		text(this.currentPlayer.score, width / 2, LINE_SPACING)
 	}
 
 	drawLivesRemaining() {
@@ -260,7 +262,7 @@ class Game {
 		textSize(32)
 		fill(255, 30, 30)
 		strokeWeight(4)
-		text('❤️'.repeat(this.livesRemaining), width - MARGIN * 2, LINE_SPACING)
+		text('❤️'.repeat(this.currentPlayer.lives), width - MARGIN * 2, LINE_SPACING)
 	}
 
 	gotoNextLevel() {
@@ -287,7 +289,7 @@ class Game {
 			// Initialize global game values
 			this.guess = []
 			this.wrongGuesses = []
-			this.livesRemaining = this.livesPerRound
+			this.currentPlayer.lives = this.livesPerRound
 
 			// Fill the guess array with underscores corresponding to the phrase
 			for (let i = 0; i < this.curPhrase.phrase.length; i++) {
