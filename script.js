@@ -1,10 +1,11 @@
 // Pre-game state controls
 const SELECT_MODE_STATE = 0
 const PLAY_STATE = 1
+const OPTIONS_STATE = 2
 let state = SELECT_MODE_STATE
 
 // Mode selection buttons stuff
-let modes, currentMode
+let modes, currentMode, optionsButton
 let modeSelectButtons = []
 const BUTTON_WIDTH = 200
 const BUTTON_HEIGHT = 100
@@ -48,6 +49,20 @@ function setup() {
 		button.hide()
 		modeSelectButtons.push(button)
 	}
+  //TODO: make this code cleaner
+  optionsButton = createButton("Options")
+  optionsButton.size(BUTTON_WIDTH, BUTTON_HEIGHT)
+  optionsButton.style('font-size', '24px')
+  //TODO: fix button gap
+  optionsButton.position(
+			(width - BUTTON_WIDTH) / 2,
+			(height - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) / 2 - BUTTON_GAP))
+  optionsButton.mousePressed(() => {
+			modeSelectButtons.forEach((b) => b.hide())
+      optionsButton.hide()
+			state = OPTIONS_STATE
+		})
+  optionsButton.hide()
 }
 
 function draw() {
@@ -58,6 +73,9 @@ function draw() {
 		case PLAY_STATE:
 			currentMode.run()
 			break
+    case OPTIONS_STATE:
+      background(50, 150, 150)
+      break
 	}
 }
 
@@ -71,6 +89,7 @@ function showMainScreen() {
 	fill(150, 150, 150)
 	text('Please select a game mode', width / 2, 120)
 	modeSelectButtons.forEach((b) => b.show())
+  optionsButton.show()
 }
 
 function keyPressed() {
