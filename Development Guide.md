@@ -5,6 +5,7 @@
 
 
 ## General Information 
+
 - This project runs on P5JS.
 - This project is for the purpose of designing an eductaional game for kids that's based off of tha classic 'Hangman' game. 
 - This project includes multiple different subjects and is always open to improvments.
