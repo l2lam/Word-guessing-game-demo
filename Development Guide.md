@@ -15,5 +15,5 @@
 ### Orginization 
 Everything pertaining to this project can be found in individualizd folders with like functions.
 
-- Things like Dialogs, phrases, and sounds can all be found in there own ordered files
+- Things like Dialogs, phrases, and sounds can all be found in there own organized files
 - Be efficent and concise with your submissions and keep them to their organized files.(**Do Not Submit Seperate Issues In The Same File**)
