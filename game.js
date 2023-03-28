@@ -9,6 +9,8 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
+const targetScore = 10000;
+
 class Game {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		this.bgImage = bgImage
@@ -199,6 +201,7 @@ class Game {
 		if (this.wrongGuesses.length > 1) {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
 		}
+		this.drawTargetScore()
 	}
 
 	drawTopBar() {
@@ -249,6 +252,15 @@ class Game {
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(this.score, width / 2, LINE_SPACING)
+	}
+
+	drawTargetScore() {
+		textAlign(CENTER, CENTER)
+		textSize(30)
+		fill(255, 255, 250)
+		strokeWeight(4)
+		text('You need a total of ' + targetScore + ' many points to win.', width / 2, LINE_SPACING * 10)
+		text('Only ' + (targetScore - this.score) + ' points to go!', width / 2, LINE_SPACING * 11)
 	}
 
 	drawLivesRemaining() {
