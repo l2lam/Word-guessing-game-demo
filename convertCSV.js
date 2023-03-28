@@ -1,21 +1,19 @@
 function getTenPlusPhrases() {
-  let 
+  let
 }
 
 function getPhrases() {
-  
+
 }
 
-function readFile(file) {
-  // Check if the file is an image.
-  if (file.type && !file.type.endsWith('.csv')) {
-    console.log('File is not a csv file.', file.type, file);
-    return;
-  }
+let phrase
+function readFile(event) {
+  let file = event.target.files[0]
 
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
-    img.src = event.target.result;
+    phrase = event.target.result;
+    console.log(phrase)
   });
   reader.readAsText(file);
 }

@@ -28,6 +28,7 @@ function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
   document.getElementById("file-selector").setAttribute("hidden", true)
+  document.getElementById("file-selector").addEventListener('change', (event) => {readFile(event)})
 
 	// Set the frame rate
 	frameRate(fr)
