@@ -27,7 +27,6 @@ function preload() {
 function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
-  document.getElementById("file-selector").setAttribute("hidden", true)
   document.getElementById("file-selector").addEventListener('change', (event) => {readFile(event)})
 
 	// Set the frame rate
@@ -46,6 +45,7 @@ function setup() {
 		button.mousePressed(() => {
 			currentMode = modes[i]
 			modeSelectButtons.forEach((b) => b.hide())
+      optionsButton.hide()
 			state = PLAY_STATE
 		})
 		button.hide()
@@ -101,7 +101,7 @@ function showOptionsScreen() {
 	textAlign(CENTER, CENTER)
 	textSize(30)
 	text('Please select a .csv file', width / 2, 60)
-  document.getElementById("file-selector").setAttribute("hidden", false)
+  document.getElementById("file-selector").style.display = "block"
 }
 
 function keyPressed() {
