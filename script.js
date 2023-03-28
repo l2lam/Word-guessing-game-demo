@@ -27,6 +27,7 @@ function preload() {
 function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
+  document.getElementById("file-selector").setAttribute("hidden", true)
 
 	// Set the frame rate
 	frameRate(fr)
@@ -63,6 +64,7 @@ function setup() {
 			state = OPTIONS_STATE
 		})
   optionsButton.hide()
+  
 }
 
 function draw() {
@@ -74,7 +76,7 @@ function draw() {
 			currentMode.run()
 			break
     case OPTIONS_STATE:
-      background(50, 150, 150)
+      showOptionsScreen()
       break
 	}
 }
@@ -90,6 +92,15 @@ function showMainScreen() {
 	text('Please select a game mode', width / 2, 120)
 	modeSelectButtons.forEach((b) => b.show())
   optionsButton.show()
+}
+
+function showOptionsScreen() {
+  background(50, 150, 150)
+	fill(0, 50, 50)
+	textAlign(CENTER, CENTER)
+	textSize(30)
+	text('Please select a .csv file', width / 2, 60)
+  document.getElementById("file-selector").setAttribute("hidden", false)
 }
 
 function keyPressed() {
