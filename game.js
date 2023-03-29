@@ -259,7 +259,7 @@ class Game {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		text('You need a total of ' + targetScore + ' many points to win.', width / 2, LINE_SPACING * 10)
+		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 10)
 		text('Only ' + (targetScore - this.score) + ' points to go!', width / 2, LINE_SPACING * 11)
 	}
 
