@@ -26,7 +26,7 @@ let toPhrase = function(value, state) {
   }
 }
 
-let logPhrases = function(data) {
+let logPhraseEntries = function(data) {
   data.forEach((phrase) => {
     phrase = new Phrase(phrase[0], phrase[1], phrase[2])
   })
@@ -34,6 +34,6 @@ let logPhrases = function(data) {
 }
 
 function csvToPhrase(result) {
-  var phrases = $.csv.toArray(result, { onParseValue: $.csv.hooks.castToScalar, onPostParse: logPhrases })
+  var phrases = $.csv.toArray(result, { onParseValue: $.csv.hooks.castToScalar, onPostParse: logPhraseEntries })
   
 }
