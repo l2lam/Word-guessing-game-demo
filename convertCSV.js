@@ -1,4 +1,7 @@
 class CsvPhraseImporter {
+
+  phrases = []
+  
   constructor(event) {
     this.readFile(event)
   }
@@ -9,42 +12,23 @@ class CsvPhraseImporter {
     const reader = new FileReader();
     reader.addEventListener('load', (event) => {
       //console.log(csv)
-      this.phrase = this.csvToPhrase(event.target.result)
+      this.csvToPhrase(event.target.result)
     });
     reader.readAsText(file);
   }
   
-  toPhrase = function(value, state) {
-    console.log("hello?")
-    switch (state.colNum) {
-      case 1:
-        var word = value
-        return false
-      case 2:
-        var hint = value
-        return false
-      case 3:
-        var category = value
-        return new Phrase(word, hint, category)
-      default:
-        console.log("entered default of toPhrase function")
-        return false
-    }
-  }
-  logPhraseEntries = function(data) {
-    data.forEach((phrase) => {
-      phrase = new Phrase(phrase[0], phrase[1], phrase[2])
-    })
-    console.log(data)
-  }
   csvToPhrase(result) {
-    var phrases = $.csv.toArray(result, { onParseValue: this.toPhrase })
+    let rawParseResults = Papa.parse(result)
+    rawParseResults.data.forEach((column) => {
+      this.phrases.push(new Phrase(column[0], column[1], column[2]))
+    })
   }
-  
 }
 
 let phraseImporters = []
 
 function addNewCsvPhraseList(event) {
-  setOfPhraseImporters.push(new CsvPhraseList(event))
+  let importer = new CsvPhraseImporter(event)
+  phraseImporters.push(importer.phrases)
+  console.log("phrase importers: ", phraseImporters)
 }
