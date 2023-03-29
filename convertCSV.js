@@ -1,4 +1,4 @@
-class CsvPhraseImporter {
+class CsvPhraseIImporter {
   constructor(event) {
     this.readFile(event)
   }
