@@ -27,7 +27,7 @@ function preload() {
 function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
-  document.getElementById("file-selector").addEventListener('change', (event) => {readFile(event)})
+  document.getElementById("file-selector").addEventListener('change', (event) => {addNewCsvPhraseList(event)})
 
 	// Set the frame rate
 	frameRate(fr)
