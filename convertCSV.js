@@ -1,4 +1,4 @@
-class csvPhraseList {
+class CsvPhraseList {
   constructor(event) {
     this.readFile(event)
   }
@@ -15,6 +15,7 @@ class csvPhraseList {
   }
   
   toPhrase = function(value, state) {
+    console.log("hello?")
     switch (state.colNum) {
       case 1:
         var word = value
@@ -36,15 +37,14 @@ class csvPhraseList {
     })
     console.log(data)
   }
-  
   csvToPhrase(result) {
-    var phrases = $.csv.toArray(result, { onParseValue: $.csv.hooks.castToScalar, onPostParse: this.logPhraseEntries })
+    var phrases = $.csv.toArray(result, { onParseValue: this.toPhrase })
   }
   
 }
 
-let setsOfPhrases = []
+let setOfPhraseImporters = []
 
 function addNewCsvPhraseList(event) {
-  setsOfPhrases.push(new csvPhraseList(event))
+  setOfPhraseImporters.push(new CsvPhraseList(event))
 }
