@@ -43,7 +43,7 @@ class CsvPhraseList {
   
 }
 
-let setOfPhraseImporters = []
+let phraseImporters = []
 
 function addNewCsvPhraseList(event) {
   setOfPhraseImporters.push(new CsvPhraseList(event))
