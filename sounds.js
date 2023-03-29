@@ -35,20 +35,24 @@ function playIncorrectGuessSound() {
 
 function playNewPuzzleSound() {
   if (!newPuzzleSound.isPlaying())
+    newPuzzleSound.setVolume(0.1);
     newPuzzleSound.play();
 }
 
 function playPuzzleSolvedSound() {
   if (!puzzleSolvedSound.isPlaying())
+    puzzleSolvedSound.setVolume(0.1);
     puzzleSolvedSound.play();
 }
 
 function playPuzzleFailedSound() {
   if (!puzzleFailedSound.isPlaying())
+    puzzleFailedSound.setVolume(0.1);
     puzzleFailedSound.play();
 }
 
 function playGameOverSound() {
   if (!gameOverSound.isPlaying())
+    gameOverSound.setVolume(0.1);
     gameOverSound.play();
 }
