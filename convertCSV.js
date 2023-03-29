@@ -1,20 +1,10 @@
-function getTenPlusPhrases() {
-  let
-}
-
-function getPhrases() {
-
-}
-
 function readFile(event) {
-  let csv
   let file = event.target.files[0]
   
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
-    csv = event.target.result;
     //console.log(csv)
-    csvToPhrase(csv)
+    csvToPhrase(event.target.result)
   });
   reader.readAsText(file);
 }
@@ -43,7 +33,7 @@ let logPhrases = function(data) {
   console.log(data)
 }
 
-function csvToPhrase(csv) {
-  var phrases = $.csv.toArray(csv, { onPostParse: logPhrases })
+function csvToPhrase(result) {
+  var phrases = $.csv.toArray(result, { onParseValue: $.csv.hooks.castToScalar, onPostParse: logPhrases })
   
 }
