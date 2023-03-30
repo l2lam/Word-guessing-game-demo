@@ -106,7 +106,6 @@ class Game {
 				case GameStates.INCORRECT_GUESS:
 					this.drawIncorrectGuessMessage()
 					this.wrongGuesses.push(this.incorrectGuessChar)
-					this.livesRemaining--
 					this.incorrectGuessChar = null
 					playIncorrectGuessSound()
 					this.pause(2000)
@@ -312,9 +311,12 @@ class Game {
 		// Check results for matches
 		if (this.correctLetterIndices.length == 0) {
 			if (this.wrongGuesses.includes(letter)) {
+				// Already guessed that char
 				playDuplicateGuessSound()
 			} else {
+				// Incorrect guess, adjust states accordingly
 				this.incorrectGuessChar = letter
+				this.livesRemaining--
 			}
 		}
 	}
