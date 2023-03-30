@@ -84,10 +84,10 @@ class Game extends Screen {
 
   onSpinButtonPressed() {
     // Start the spin process
-    print("button pressed yo");
     this.spinCount = Math.ceil(random(30, 60));
   }
 
+  /** Calculate the current game state */
   gameState() {
     if (this.level > this.numPhrases) return GameStates.GAME_OVER;
     if (this.spinCount > 0) return GameStates.SPINNING;
@@ -99,6 +99,7 @@ class Game extends Screen {
     return GameStates.GUESSING;
   }
 
+  /** Use this function to set a period to pause rendering; it works in co-ordination with the render() function */
   pause(ms) {
     this.pauseUntilMilliSecond = millis() + ms;
   }
