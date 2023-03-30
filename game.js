@@ -37,20 +37,49 @@ class Game extends Screen {
       new SpinOption(1000),
       new BankruptSpinOption(100),
     ];
-    this.spinButton = new PaintedButton(
-      "🎲",
-      width / 2,
-      LINE_SPACING * 11,
-      30,
-      () => this.onSpinButtonPressed()
-    );
-
+    this.createButtons();
     this.gotoNextLevel();
   }
 
-  /** Get the list of painted buttons that should be monitored for activity */
+  /** Game initialization */
+  init() {
+    this._returnToPreviousScreen = false;
+  }
+
+  createButtons() {
+    const buttonGap = 20;
+    const buttonRadius = 30;
+    this.buttons = [
+      // The button to spin for points
+      new PaintedButton("🎲", 0, 0, buttonRadius, () =>
+        this.onSpinButtonPressed()
+      ),
+      // The button to show the on-screen keyboard
+      new PaintedButton("⌨️", 0, 0, buttonRadius, () =>
+        navigator.virtualKeyboard.show()
+      ),
+      // The button to quit the game and return to the previous screen
+      new PaintedButton(
+        "🛑",
+        0,
+        0,
+        buttonRadius,
+        () => (this._returnToPreviousScreen = true),
+        () => fill("grey")
+      ),
+    ];
+    // Layout the buttons nicely in a row
+    let nButtons = this.buttons.length;
+    let buttonBarWidth = (buttonRadius + buttonGap) * nButtons;
+    this.buttons.forEach((button, i) => {
+      button.y = LINE_SPACING * 11;
+      button.x =
+        width / 2 + (buttonRadius * 2 + buttonGap) * i - buttonBarWidth / 2;
+    });
+  }
+
   paintedButtons() {
-    return [this.spinButton];
+    return this.buttons;
   }
 
   onSpinButtonPressed() {
@@ -249,7 +278,7 @@ class Game extends Screen {
       text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10);
     }
 
-    this.spinButton.render();
+    this.buttons.forEach((b) => b.render());
   }
 
   drawTopBar() {

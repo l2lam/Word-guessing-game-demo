@@ -6,12 +6,20 @@ class GameMode extends Screen {
     this.game = game;
   }
 
+  init() {
+    this.game.init();
+  }
+
   render() {
     this.game.render();
   }
 
   paintedButtons() {
     return this.game.paintedButtons();
+  }
+
+  returnToPreviousScreen() {
+    return this.game.returnToPreviousScreen();
   }
 
   processKeyInput(key) {
