@@ -79,3 +79,7 @@ function keyPressed() {
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
 	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
+
+function reset() {
+  
+}

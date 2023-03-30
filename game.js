@@ -3,13 +3,15 @@ const GameStates = {
 	CORRECT_GUESS: 'A letter is guessed correctly',
 	INCORRECT_GUESS: 'A letter is guessed incorrectly',
 	GAME_OVER: 'Game over',
+  GAME_WIN: 'You win',
 	PUZZLE_UNSUCCESSFUL: 'Failed to complete the puzzle',
 	SPINNING: 'Spinning for points',
 	SPINNING_FINISHED: 'Spinning completed',
 	SOLVED: 'Puzzle solved',
 }
 
-const targetScore = 10000;
+const targetScore = 1000;
+
 
 class Game {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
@@ -30,6 +32,12 @@ class Game {
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
+    this.buttonReturnMenu = createButton('Return to menu')
+    this.buttonReturnMenu.hide()
+    this.buttonReturnMenu.mousePressed(() => {state = SELECT_MODE_STATE
+    this.buttonReturnMenu.hide()                                    
+    this.resetGame()
+                                              })
 		this.spinOptions = [
 			new SpinOption(100),
 			new SpinOption(200),
@@ -50,6 +58,7 @@ class Game {
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
+    if (this.score >= targetScore) return GameStates.GAME_WIN
 		return GameStates.GUESSING
 	}
 
@@ -58,6 +67,23 @@ class Game {
 	}
 
 	// Draw the game screen(s)
+  resetGame() {
+    this.livesRemaining = 0
+		this.guess = []
+		this.wrongGuesses = []
+		this.score = 0
+		this.currentSpinOption = new SpinOption(100)
+		this.spinCount = 0 // The number of times to spin for points
+		this.spinResultSequence = 0
+		this.level = 1 // The current level
+		this.phrases = phrases.slice() // Copy the original list of phrases
+		this.numPhrases = this.phrases.length // The total number of phrases in the game
+		this.correctLetterIndices = []
+		this.incorrectGuessChar = null
+		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
+		this.puzzleRevealCountdown = 0
+  }
+  
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {
 			// Do nothing - ie. pause rendering
@@ -67,6 +93,10 @@ class Game {
 					this.drawGameOver()
 					playGameOverSound()
 					break
+
+        case GameStates.GAME_WIN:
+          this.drawWinScreen()
+          break
 
 				case GameStates.SPINNING:
 					let option = random(this.spinOptions)
@@ -139,6 +169,13 @@ class Game {
 		this.drawPuzzle()
 		this.drawBottomBar()
 	}
+
+  drawWinScreen() {
+    this.buttonReturnMenu.size(BUTTON_WIDTH, BUTTON_HEIGHT)
+		this.buttonReturnMenu.style('font-size', '24px')
+		this.buttonReturnMenu.position((width - BUTTON_WIDTH) / 2, height / 2)
+    this.buttonReturnMenu.show()
+  }
 
 	drawSolvedMessage() {
 		drawMessage(
@@ -331,3 +368,5 @@ class Game {
 		}
 	}
 }
+
+
