@@ -4,11 +4,11 @@ const PLAY_STATE = 1
 let state = SELECT_MODE_STATE
 
 // Mode selection buttons stuff
-let modes, currentMode
+let modes, currentMode, optionsButton
 let modeSelectButtons = []
 const BUTTON_WIDTH = 200
-const BUTTON_HEIGHT = 100
-const BUTTON_GAP = 20
+const BUTTON_HEIGHT = 50
+const BUTTON_GAP = 10
 
 // The frame rate
 const fr = 10
@@ -17,8 +17,9 @@ const fr = 10
 // that may take a little while to finish
 function preload() {
 	modes = [
+    new GameMode('☰', '', new Options()),
 		new GameMode('Grade One', '', new Game(gradeOnePhrases, '🍪', 5, loadImage('assets/candy.jpg'))),
-		new GameMode('Grade Ten+', '', new Game(standardPhrases, '_', 3, loadImage('assets/candy.jpg'))),
+		new GameMode('Grade Ten+', '', new Game(standardPhrases, '_', 3, loadImage('assets/candy.jpg')))
 	]
 	preLoadSoundFiles()
 }
@@ -26,6 +27,7 @@ function preload() {
 function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
+  file_selector.addEventListener('change', (event) => {addNewCsvPhraseList(event)})
 
 	// Set the frame rate
 	frameRate(fr)
@@ -38,7 +40,8 @@ function setup() {
 		button.style('font-size', '24px')
 		button.position(
 			(width - BUTTON_WIDTH) / 2,
-			(height - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
+      //700 was originally "height", but it messes up on smaller viewports. Not entirely sure why.
+			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
 		button.mousePressed(() => {
 			currentMode = modes[i]
@@ -48,6 +51,7 @@ function setup() {
 		button.hide()
 		modeSelectButtons.push(button)
 	}
+  
 }
 
 function draw() {
