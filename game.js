@@ -88,11 +88,7 @@ class Game {
 					break
 
 				case GameStates.SOLVED:
-					this.drawSolvedMessage()
-					this.level++
-					this.gotoNextLevel()
-					playPuzzleSolvedSound()
-					this.pause(3000)
+					gameStateSolved()
 					break
 
 				case GameStates.PUZZLE_UNSUCCESSFUL:
@@ -126,6 +122,13 @@ class Game {
 			}
 		}
 	}
+  gameStateSolved(){
+    	this.drawSolvedMessage()
+	this.level++
+	this.gotoNextLevel()
+	playPuzzleSolvedSound()
+	this.pause(3000)
+    }
 
 	drawBackground() {
 		if (this.bgImage) background(this.bgImage, 100)
