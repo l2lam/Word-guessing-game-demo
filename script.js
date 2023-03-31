@@ -48,6 +48,7 @@ function setup() {
       currentMode = modes[i]
       modeSelectButtons.forEach((b) => b.hide())
       if (currentMode.name == 'Grade Ten+') {
+        // Initiates setup with phrases
         currentMode.setup(phraseImporters[file_selector.selectedIndex])
       }
       state = PLAY_STATE
@@ -85,6 +86,7 @@ function keyPressed() {
 	// Allow the user to reset the game via a special button
 	if (key === 'F2') {
     state = SELECT_MODE_STATE
+    // TODO: put into a "hide" function in options.js
     file_input.style.display = "none"
     file_selector.style.display = "none"
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
