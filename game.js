@@ -10,12 +10,13 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
-const targetScore = 2000;
+const targetScore = 100;
 
 
 class Game {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		this.bgImage = bgImage
+    this.winImage = loadImage('assets/winscreen.png')
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -173,6 +174,7 @@ class Game {
 	}
 
   drawWinScreen() {
+    image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
     this.buttonReturnMenu.size(BUTTON_WIDTH, BUTTON_HEIGHT)
 		this.buttonReturnMenu.style('font-size', '24px')
 		this.buttonReturnMenu.position((width - BUTTON_WIDTH) / 2, height / 2)
