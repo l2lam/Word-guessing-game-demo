@@ -28,7 +28,7 @@ class CsvPhraseImporter {
   }
 }
 
-let phraseImporters = []
+let phraseImporters = [standardPhrases]
 
 function addNewCsvPhraseList(event) {
   let importer = new CsvPhraseImporter(event)

@@ -10,7 +10,7 @@ const GameStates = {
 }
 
 class Game {
-	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
+	constructor(defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		this.bgImage = bgImage
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
@@ -22,7 +22,7 @@ class Game {
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 1 // The current level
-		this.phrases = phrases.slice() // Copy the original list of phrases
+		this.phrases = defaultPhrases.slice() // Copy the original list of phrases
 		this.numPhrases = this.phrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
 		this.incorrectGuessChar = null
@@ -55,6 +55,17 @@ class Game {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
+  // General setup
+  setup(phrases){
+    this.setupPhrases(phrases)
+  }
+
+  setupPhrases(phrases) {
+    this.phrases = phrases.slice() // Copy the new list of phrases
+		this.numPhrases = this.phrases.length
+    this.gotoNextLevel()
+  }
+  
 	// Draw the game screen(s)
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {

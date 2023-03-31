@@ -8,6 +8,11 @@ class GameMode {
 	run() {
 		this.game.render()
 	}
+
+  setup(phrases) {
+    this.game.setup(phrases)
+  }
+  
 	processKeyInput(key) {
 		this.game.processKeyInput(key)
 	}

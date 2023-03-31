@@ -47,6 +47,9 @@ function setup() {
     button.mousePressed(() => {
       currentMode = modes[i]
       modeSelectButtons.forEach((b) => b.hide())
+      if (currentMode.name == 'Grade Ten+') {
+        currentMode.setup(phraseImporters[file_selector.selectedIndex])
+      }
       state = PLAY_STATE
     })
 		button.hide()
