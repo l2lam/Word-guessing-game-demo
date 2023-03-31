@@ -10,7 +10,7 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
-const targetScore = 100;
+const targetScore = 2000;
 
 
 class Game {
@@ -38,6 +38,7 @@ class Game {
     this.buttonReturnMenu.mousePressed(() => {state = SELECT_MODE_STATE
     this.buttonReturnMenu.hide()                                    
     this.resetGame()
+    this.gotoNextLevel()
                                               })
 		this.spinOptions = [
 			new SpinOption(100),
@@ -67,8 +68,8 @@ class Game {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
-	// Draw the game screen(s)
   resetGame() {
+    this.noGuessChar = '_'
     this.livesRemaining = 0
 		this.guess = []
 		this.wrongGuesses = []
@@ -77,14 +78,14 @@ class Game {
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 0 // The current level
-		this.phrases = phrases.slice() // Copy the original list of phrases
 		this.numPhrases = this.phrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
   }
-  
+
+  	// Draw the game screen(s)
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {
 			// Do nothing - ie. pause rendering
@@ -304,8 +305,8 @@ class Game {
       this.pointsToGo = targetScore - this.score
     }
     
-		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 10)
-		text('Only ' + (this.pointsToGo) + ' points to go!', width / 2, LINE_SPACING * 11)
+		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
+		text('Only ' + (this.pointsToGo) + ' points to go!', width / 2, LINE_SPACING * 14)
 	}
 
 	drawLivesRemaining() {
