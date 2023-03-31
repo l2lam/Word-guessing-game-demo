@@ -8,7 +8,7 @@ let modes, currentMode, optionsButton
 let modeSelectButtons = []
 const BUTTON_WIDTH = 200
 const BUTTON_HEIGHT = 50
-const BUTTON_GAP = 10
+const BUTTON_GAP = 1
 
 // The frame rate
 const fr = 10
@@ -36,6 +36,7 @@ function setup() {
 	for (let i = 0; i < modes.length; i++) {
 		let mode = modes[i]
 		let button = createButton(mode.name)
+    button.attribute('name', mode.name)
 		button.size(BUTTON_WIDTH, BUTTON_HEIGHT)
 		button.style('font-size', '24px')
 		button.position(
@@ -43,11 +44,11 @@ function setup() {
       //700 was originally "height", but it messes up on smaller viewports. Not entirely sure why.
 			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
-		button.mousePressed(() => {
-			currentMode = modes[i]
-			modeSelectButtons.forEach((b) => b.hide())
-			state = PLAY_STATE
-		})
+    button.mousePressed(() => {
+      currentMode = modes[i]
+      modeSelectButtons.forEach((b) => b.hide())
+      state = PLAY_STATE
+    })
 		button.hide()
 		modeSelectButtons.push(button)
 	}
@@ -79,7 +80,9 @@ function showMainScreen() {
 
 function keyPressed() {
 	// Allow the user to reset the game via a special button
-	if (key === 'F2') state = SELECT_MODE_STATE
+	if (key === 'F2') {
+    state = SELECT_MODE_STATE
+    file_selector.style.display = "none"
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
-	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
+	} else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
