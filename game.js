@@ -9,8 +9,9 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
-class Game {
+class Game extends Screen {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
+		super()
 		this.bgImage = bgImage
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
@@ -36,10 +37,52 @@ class Game {
 			new SpinOption(1000),
 			new BankruptSpinOption(100),
 		]
-
+		this.createButtons()
 		this.gotoNextLevel()
 	}
 
+	/** Game initialization */
+	init() {
+		this._returnToPreviousScreen = false
+	}
+
+	createButtons() {
+		const buttonGap = 20
+		const buttonRadius = 30
+		this.buttons = [
+			// The button to spin for points
+			new PaintedButton('🎲', 0, 0, buttonRadius, () => this.onSpinButtonPressed()),
+			// The button to show the on-screen keyboard
+			new PaintedButton('⌨️', 0, 0, buttonRadius, () => navigator.virtualKeyboard.show()),
+			// The button to quit the game and return to the previous screen
+			new PaintedButton(
+				'🛑',
+				0,
+				0,
+				buttonRadius,
+				() => (this._returnToPreviousScreen = true),
+				() => fill('grey')
+			),
+		]
+		// Layout the buttons nicely in a row
+		let nButtons = this.buttons.length
+		let buttonBarWidth = (buttonRadius + buttonGap) * nButtons
+		this.buttons.forEach((button, i) => {
+			button.y = LINE_SPACING * 11
+			button.x = width / 2 + (buttonRadius * 2 + buttonGap) * i - buttonBarWidth / 2
+		})
+	}
+
+	paintedButtons() {
+		return this.buttons
+	}
+
+	onSpinButtonPressed() {
+		// Start the spin process
+		this.spinCount = Math.ceil(random(30, 60))
+	}
+
+	/** Calculate the current game state */
 	gameState() {
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
@@ -51,6 +94,7 @@ class Game {
 		return GameStates.GUESSING
 	}
 
+	/** Use this function to set a period to pause rendering; it works in co-ordination with the render() function */
 	pause(ms) {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
@@ -198,6 +242,8 @@ class Game {
 		if (this.wrongGuesses.length > 1) {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
 		}
+
+		this.buttons.forEach((b) => b.render())
 	}
 
 	drawTopBar() {
@@ -288,8 +334,7 @@ class Game {
 			if (keyPressed.match(/^[a-z0-9+-=?']$/i)) {
 				this.processGuess(keyPressed)
 			} else if (keyPressed === 'F4') {
-				//await spinForPoints();
-				this.spinCount = Math.ceil(random(30, 60))
+				this.onSpinButtonPressed()
 			}
 		}
 	}

@@ -1,14 +1,28 @@
-class GameMode {
-	constructor(name, desc, game) {
-		this.name = name
-		this.description = desc
-		this.game = game
-	}
+class GameMode extends Screen {
+  constructor(name, desc, game) {
+    super();
+    this.name = name;
+    this.description = desc;
+    this.game = game;
+  }
 
-	run() {
-		this.game.render()
-	}
-	processKeyInput(key) {
-		this.game.processKeyInput(key)
-	}
+  init() {
+    this.game.init();
+  }
+
+  render() {
+    this.game.render();
+  }
+
+  paintedButtons() {
+    return this.game.paintedButtons();
+  }
+
+  returnToPreviousScreen() {
+    return this.game.returnToPreviousScreen();
+  }
+
+  processKeyInput(key) {
+    this.game.processKeyInput(key);
+  }
 }
