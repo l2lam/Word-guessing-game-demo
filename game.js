@@ -10,7 +10,7 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
-const targetScore = 1000;
+const targetScore = 100;
 
 
 class Game {
@@ -34,6 +34,7 @@ class Game {
 		this.puzzleRevealCountdown = 0
     this.buttonReturnMenu = createButton('Return to menu')
     this.buttonReturnMenu.hide()
+    this.pointsToGo
     this.buttonReturnMenu.mousePressed(() => {state = SELECT_MODE_STATE
     this.buttonReturnMenu.hide()                                    
     this.resetGame()
@@ -75,7 +76,7 @@ class Game {
 		this.currentSpinOption = new SpinOption(100)
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
-		this.level = 1 // The current level
+		this.level = 0 // The current level
 		this.phrases = phrases.slice() // Copy the original list of phrases
 		this.numPhrases = this.phrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
@@ -296,8 +297,15 @@ class Game {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
+    if (this.score >= targetScore) {
+      this.pointsToGo = 0
+    }
+    else {
+      this.pointsToGo = targetScore - this.score
+    }
+    
 		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 10)
-		text('Only ' + (targetScore - this.score) + ' points to go!', width / 2, LINE_SPACING * 11)
+		text('Only ' + (this.pointsToGo) + ' points to go!', width / 2, LINE_SPACING * 11)
 	}
 
 	drawLivesRemaining() {
