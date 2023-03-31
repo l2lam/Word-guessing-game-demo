@@ -22,7 +22,7 @@ function setup() {
 
 	// Setup all the supported modes here so that p5js lib facilities are made available to the constructors
 	modes = [
-		new GameMode('☰', '', new Options()),
+		new GameMode('☰', '', new ConfigurationScreen()),
 		new GameMode('Grade One', '', new Game(gradeOnePhrases, '🍪', 5, loadImage('assets/candy.jpg'))),
 		new GameMode('Grade Ten+', '', new Game(standardPhrases, '_', 3, loadImage('assets/candy.jpg'))),
 	]
