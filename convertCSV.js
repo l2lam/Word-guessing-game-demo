@@ -1,6 +1,8 @@
 class CsvPhraseImporter {
 
   phrases = []
+
+  fileName = ""
   
   constructor(event) {
     this.readFile(event)
@@ -8,6 +10,7 @@ class CsvPhraseImporter {
   
   readFile(event) {
     let file = event.target.files[0]
+    this.fileName = event.target.files[0].name
     
     const reader = new FileReader();
     reader.addEventListener('load', (event) => {
@@ -29,6 +32,9 @@ let phraseImporters = []
 
 function addNewCsvPhraseList(event) {
   let importer = new CsvPhraseImporter(event)
+  let option = document.createElement("option")
+  option.text = importer.fileName
+  file_selector.add(option)
   phraseImporters.push(importer.phrases)
   console.log("phrase importers: ", phraseImporters)
 }

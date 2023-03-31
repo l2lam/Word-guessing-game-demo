@@ -27,7 +27,7 @@ function preload() {
 function setup() {
 	// Make the drawing canvas as big as the window
 	createCanvas(windowWidth, windowHeight)
-  file_selector.addEventListener('change', (event) => {addNewCsvPhraseList(event)})
+  file_input.addEventListener('change', (event) => {addNewCsvPhraseList(event)})
 
 	// Set the frame rate
 	frameRate(fr)
@@ -82,6 +82,7 @@ function keyPressed() {
 	// Allow the user to reset the game via a special button
 	if (key === 'F2') {
     state = SELECT_MODE_STATE
+    file_input.style.display = "none"
     file_selector.style.display = "none"
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
 	} else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
