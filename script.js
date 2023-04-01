@@ -30,6 +30,10 @@ function setup() {
 	// Set the frame rate
 	frameRate(fr)
 
+  let targetScoreInput = createInput('')
+  targetScoreInput.position(width / 2.4, 200)
+  targetScoreInput.size(100)
+  targetScoreInput.input(scoreInput)
 	// Create buttons for mode selection
 	for (let i = 0; i < modes.length; i++) {
 		let mode = modes[i]
@@ -43,6 +47,7 @@ function setup() {
 		button.mousePressed(() => {
 			currentMode = modes[i]
 			modeSelectButtons.forEach((b) => b.hide())
+      targetScoreInput.hide()
 			state = PLAY_STATE
 		})
 		button.hide()
@@ -69,7 +74,7 @@ function showMainScreen() {
 	text('Char Char Bang!', width / 2, 60)
 	textSize(30)
 	fill(150, 150, 150)
-	text('Please select a game mode', width / 2, 120)
+	text('Please select a game mode and enter target score', width / 2, 140)
 	modeSelectButtons.forEach((b) => b.show())
 }
 
@@ -80,6 +85,9 @@ function keyPressed() {
 	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
 
-function reset() {
-  
+let targetScoreInput
+let targetScore
+
+function scoreInput() {
+  targetScore = this.value()
 }

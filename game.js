@@ -10,9 +10,6 @@ const GameStates = {
 	SOLVED: 'Puzzle solved',
 }
 
-const targetScore = 100;
-
-
 class Game {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		this.bgImage = bgImage
@@ -37,7 +34,7 @@ class Game {
     this.buttonReturnMenu.hide()
     this.pointsToGo
     this.buttonReturnMenu.mousePressed(() => {state = SELECT_MODE_STATE
-    this.buttonReturnMenu.hide()                                    
+    this.buttonReturnMenu.hide()    
     this.resetGame()
     this.gotoNextLevel()
                                               })
