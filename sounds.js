@@ -35,6 +35,7 @@ function playIncorrectGuessSound() {
 
 function playNewPuzzleSound() {
   if (!newPuzzleSound.isPlaying())
+    newPuzzleSound.setVolume(0.2);
     newPuzzleSound.play();
 }
 
