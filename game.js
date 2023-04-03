@@ -34,7 +34,7 @@ class Game extends Screen {
     this.buttonReturnMenu = createButton('Return to menu')
     this.buttonReturnMenu.hide()
     this.pointsToGo
-    this.buttonReturnMenu.mousePressed(() => {state = SELECT_MODE_STATE
+    this.buttonReturnMenu.mousePressed(() => {state = MAIN_SCREEN_STATE
     this.buttonReturnMenu.hide()    
     this.resetGame()
     this.gotoNextLevel()
