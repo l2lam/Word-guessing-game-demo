@@ -3,7 +3,7 @@ const GameStates = {
 	CORRECT_GUESS: 'A letter is guessed correctly',
 	INCORRECT_GUESS: 'A letter is guessed incorrectly',
 	GAME_OVER: 'Game over',
-  GAME_WIN: 'You win',
+  	GAME_WIN: 'You win',
 	PUZZLE_UNSUCCESSFUL: 'Failed to complete the puzzle',
 	SPINNING: 'Spinning for points',
 	SPINNING_FINISHED: 'Spinning completed',
@@ -101,7 +101,7 @@ class Game extends Screen {
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
-    if (this.score >= targetScore) return GameStates.GAME_WIN
+    	if (this.score >= targetScore) return GameStates.GAME_WIN
 		return GameStates.GUESSING
 	}
 
@@ -213,13 +213,13 @@ class Game extends Screen {
 		this.drawBottomBar()
 	}
 
-  drawWinScreen() {
-    image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
-    this.buttonReturnMenu.size(BUTTON_WIDTH, BUTTON_HEIGHT)
+  	drawWinScreen() {
+    	image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
+    	this.buttonReturnMenu.size(BUTTON_WIDTH, BUTTON_HEIGHT)
 		this.buttonReturnMenu.style('font-size', '24px')
-		this.buttonReturnMenu.position((width - BUTTON_WIDTH) / 2, height / 2)
-    this.buttonReturnMenu.show()
-  }
+		this.buttonReturnMenu.position((width - BUTTON_WIDTH) / 2, height * 0.7)
+    	this.buttonReturnMenu.show()
+  	}
 
 	drawSolvedMessage() {
 		drawMessage(
