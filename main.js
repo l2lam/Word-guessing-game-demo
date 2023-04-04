@@ -4,7 +4,7 @@ const PLAY_STATE = 1
 let state = MAIN_SCREEN_STATE
 
 // Mode selection buttons stuff
-let modes, currentMode, optionsButton
+let modes, currentMode, optionsButton, targetScoreInput
 let modeSelectButtons = []
 
 // The frame rate
@@ -33,8 +33,7 @@ function setup() {
 
 	// Set the frame rate
 	frameRate(fr)
-
-  let targetScoreInput = createInput('')
+  targetScoreInput = createInput('')
   targetScoreInput.position((width / 2) - 50, 120)
   targetScoreInput.size(100)
   targetScoreInput.input(scoreInput)
@@ -87,6 +86,7 @@ function showMainScreen() {
 	fill(150, 150, 150)
 	text('Please select a game mode and enter target score', width / 2, 90)
 	modeSelectButtons.forEach((b) => b.show())
+	targetScoreInput.show()
 }
 
 function keyPressed() {
@@ -96,7 +96,6 @@ function keyPressed() {
 	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
 
-let targetScoreInput
 let targetScore
 
 function scoreInput() {

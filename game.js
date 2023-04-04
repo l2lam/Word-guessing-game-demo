@@ -31,7 +31,6 @@ class Game extends Screen {
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
-    	this.pointsToGo
 		this.spinOptions = [
 			new SpinOption(100),
 			new SpinOption(200),
@@ -319,15 +318,19 @@ class Game extends Screen {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-    if (this.score >= targetScore) {
-      this.pointsToGo = 0
-    }
-    else {
-      this.pointsToGo = targetScore - this.score
-    }
-    
+		this.calculatePointsToGo()
 		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
-		text('Only ' + (this.pointsToGo) + ' points to go!', width / 2, LINE_SPACING * 14)
+		text('Only ' + (this.calculatePointsToGo()) + ' points to go!', width / 2, LINE_SPACING * 14)
+	}
+
+	calculatePointsToGo(pointsToGo) {
+		if (this.score >= targetScore) {
+			pointsToGo = 0
+		  }
+		  else {
+			pointsToGo = targetScore - this.score
+		  }
+		  return pointsToGo
 	}
 
 	drawLivesRemaining() {
