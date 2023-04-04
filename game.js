@@ -10,8 +10,8 @@ const GameStates = {
 }
 
 class Game extends Screen {
-	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
-		super()
+	constructor(name, description, phrases, noGuessChar = '_', lives = 3, bgImage = null) {
+		super(name, description)
 		this.bgImage = bgImage
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives

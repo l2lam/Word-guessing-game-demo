@@ -1,6 +1,10 @@
 const file_selector = document.getElementById('file-selector')
 
 class ConfigurationScreen extends Screen {
+	constructor(name, description) {
+		super(name, description)
+	}
+
 	render() {
 		background(50, 150, 150)
 		fill(0, 50, 50)
