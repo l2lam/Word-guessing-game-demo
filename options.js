@@ -1,3 +1,5 @@
+//TO BE DELETED ONCE BUTTONS ARE TRANSFERED TO "configurationScreen.js"
+
 
 const file_input = document.getElementById("file-input")
 const file_selector = document.getElementById("file-selector")
