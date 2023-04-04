@@ -49,7 +49,7 @@ function setup() {
       modeSelectButtons.forEach((b) => b.hide())
       if (currentMode.name == 'Grade Ten+') {
         // Initiates setup with phrases
-        currentMode.setup(phraseImporters[file_selector.selectedIndex])
+        currentMode.setup(phraseCollectionList[file_selector.selectedIndex])
       }
       state = PLAY_STATE
     })

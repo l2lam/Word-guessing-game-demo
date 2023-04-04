@@ -27,13 +27,13 @@ class CsvPhraseImporter {
     /*
       Note: gets each *column* from each *row*
     */
-    rawParseResults.data.forEach((column) => {
-      this.phrases.push(new Phrase(column[0], column[1], column[2]))
+    rawParseResults.data.forEach((row) => {
+      this.phrases.push(new Phrase(row[0], row[1], row[2]))
     })
   }
 }
 
-let phraseImporters = [standardPhrases]
+let phraseCollectionList = [standardPhrases]
 
 function addNewCsvPhraseList(event) {
   let importer = new CsvPhraseImporter(event)
@@ -43,5 +43,5 @@ function addNewCsvPhraseList(event) {
   option.text = importer.fileName
   file_selector.add(option)
   
-  phraseImporters.push(importer.phrases)
+  phraseCollectionList.push(importer.phrases)
 }
