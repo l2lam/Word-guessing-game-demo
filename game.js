@@ -14,7 +14,7 @@ class Game extends Screen {
 	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
 		super()
 		this.bgImage = bgImage
-    this.winImage = loadImage('assets/winscreen.jpg')
+    	this.winImage = loadImage('assets/winscreen.jpg')
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -31,14 +31,7 @@ class Game extends Screen {
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
-    this.buttonReturnMenu = createButton('Return to menu')
-    this.buttonReturnMenu.hide()
-    this.pointsToGo
-    this.buttonReturnMenu.mousePressed(() => {state = MAIN_SCREEN_STATE
-    this.buttonReturnMenu.hide()    
-    this.resetGame()
-    this.gotoNextLevel()
-                                              })
+    	this.pointsToGo
 		this.spinOptions = [
 			new SpinOption(100),
 			new SpinOption(200),
@@ -110,22 +103,7 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
-  resetGame() {
-    this.noGuessChar = '_'
-    this.livesRemaining = 0
-		this.guess = []
-		this.wrongGuesses = []
-		this.score = 0
-		this.currentSpinOption = new SpinOption(100)
-		this.spinCount = 0 // The number of times to spin for points
-		this.spinResultSequence = 0
-		this.level = 0 // The current level
-		this.numPhrases = this.phrases.length // The total number of phrases in the game
-		this.correctLetterIndices = []
-		this.incorrectGuessChar = null
-		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
-		this.puzzleRevealCountdown = 0
-  }
+   
 
   	// Draw the game screen(s)
 	render() {
@@ -138,9 +116,12 @@ class Game extends Screen {
 					playGameOverSound()
 					break
 
-        case GameStates.GAME_WIN:
-          this.drawWinScreen()
-          break
+        		case GameStates.GAME_WIN:
+          			this.drawWinScreen()
+					playPuzzleSolvedSound()
+					this.pause(10)
+					this.returntoMenuAfterWin()
+          			break
 
 				case GameStates.SPINNING:
 					let option = random(this.spinOptions)
@@ -215,10 +196,6 @@ class Game extends Screen {
 
   	drawWinScreen() {
     	image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
-    	this.buttonReturnMenu.size(BUTTON_WIDTH, BUTTON_HEIGHT)
-		this.buttonReturnMenu.style('font-size', '24px')
-		this.buttonReturnMenu.position((width - BUTTON_WIDTH) / 2, height * 0.7)
-    	this.buttonReturnMenu.show()
   	}
 
 	drawSolvedMessage() {
@@ -383,6 +360,25 @@ class Game extends Screen {
 			}
 			this.puzzleRevealCountdown = this.curPhrase.phrase.length
 		}
+	}
+
+	returntoMenuAfterWin() {
+			
+			this.noGuessChar = '_'
+    		this.livesRemaining = 0
+			this.guess = []
+			this.wrongGuesses = []
+			this.score = 0
+			this.currentSpinOption = new SpinOption(100)
+			this.spinCount = 0 // The number of times to spin for points
+			this.spinResultSequence = 0
+			this.level = 0 // The current level
+			this.correctLetterIndices = []
+			this.incorrectGuessChar = null
+			this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
+			this.puzzleRevealCountdown = 0
+   	 		this.gotoNextLevel()
+			state = MAIN_SCREEN_STATE
 	}
 
 	// React to an input character
