@@ -45,6 +45,7 @@ class Game extends Screen {
 	/** Game initialization */
 	init() {
 		this._returnToPreviousScreen = false
+		this.setupPhrases()
 	}
 
 	createButtons() {
@@ -85,7 +86,6 @@ class Game extends Screen {
 
 	/** Calculate the current game state */
 	gameState() {
-		console.log(this.guess)
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
@@ -101,8 +101,12 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
-	overridePhrases(phrases) {
-		this.phrases = phrases.slice() // Copy the new list of phrases
+	setupPhrases() {
+		if (file_selector.selectedIndex !== 0) {
+			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
+		} else {
+			this.phrases = this.defaultPhrases
+		}
 		this.numPhrases = this.phrases.length
 		this.level = 0
 		this.gotoNextLevel()

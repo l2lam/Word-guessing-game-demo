@@ -49,13 +49,6 @@ function setup() {
 		button.mousePressed(() => {
 			currentMode = modes[i]
 			currentMode.init()
-			if (file_selector.selectedIndex !== 0 && currentMode.name !== '☰') {
-				currentMode.overridePhrases(phraseCollectionList[file_selector.selectedIndex])
-			} else if (currentMode.name !== '☰') {
-				currentMode.phrases = currentMode.defaultPhrases
-				currentMode.numPhrases = currentMode.defaultPhrases.length
-				currentMode.gotoNextLevel()
-			}
 			modeSelectButtons.forEach((b) => b.hide())
 			state = PLAY_STATE
 		})
