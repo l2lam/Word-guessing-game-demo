@@ -3,11 +3,12 @@ const GameStates = {
 	CORRECT_GUESS: 'A letter is guessed correctly',
 	INCORRECT_GUESS: 'A letter is guessed incorrectly',
 	GAME_OVER: 'Game over',
-  	GAME_WIN: 'You win',
 	PUZZLE_UNSUCCESSFUL: 'Failed to complete the puzzle',
 	SPINNING: 'Spinning for points',
 	SPINNING_FINISHED: 'Spinning completed',
 	SOLVED: 'Puzzle solved',
+	QUIT: 'Quit game',
+	WIN: 'Game win'
 }
 
 class Game extends Screen {
@@ -45,6 +46,8 @@ class Game extends Screen {
 
 	/** Game initialization */
 	init() {
+		this.hasWon = false
+		this.quitGame = false
 		this._returnToPreviousScreen = false
 		this.noGuessChar = '_'
 		this.livesRemaining = 0
@@ -103,11 +106,13 @@ class Game extends Screen {
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
-		if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED
+		let gameSolved = !this.guess.includes(this.noGuessChar)
+    	if (this.quitGame) return GameStates.QUIT
+		if (gameSolved) return GameStates.SOLVED
+		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
-    	if (this.score >= targetScore) return GameStates.GAME_WIN
 		return GameStates.GUESSING
 	}
 
@@ -115,8 +120,6 @@ class Game extends Screen {
 	pause(ms) {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
-
-   
 
   	// Draw the game screen(s)
 	render() {
@@ -129,11 +132,14 @@ class Game extends Screen {
 					playGameOverSound()
 					break
 
-        		case GameStates.GAME_WIN:
-          			this.drawWinScreen()
-					playPuzzleSolvedSound()
+				case GameStates.WIN:
+					this.drawWinScreen()
+					this.pause(5000)
+					this.quitGame = true
+					break
 
-					this.returntoMenuAfterWin()
+        		case GameStates.QUIT:
+					this._returnToPreviousScreen = true
           			break
 
 				case GameStates.SPINNING:
@@ -158,12 +164,14 @@ class Game extends Screen {
 					break
 
 				case GameStates.SOLVED:
+					if (this.score >= targetScore) this.hasWon = true
 					this.drawSolvedMessage()
 					this.level++
 					this.gotoNextLevel()
 					playPuzzleSolvedSound()
 					this.pause(3000)
 					break
+			
 
 				case GameStates.PUZZLE_UNSUCCESSFUL:
 					this.drawFailedMessage()
@@ -375,10 +383,6 @@ class Game extends Screen {
 			}
 			this.puzzleRevealCountdown = this.curPhrase.phrase.length
 		}
-	}
-
-	returntoMenuAfterWin() {
-			state = MAIN_SCREEN_STATE
 	}
 
 	// React to an input character

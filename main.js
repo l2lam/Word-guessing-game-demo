@@ -95,7 +95,7 @@ function keyPressed() {
 	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
 
-let targetScore
+let targetScore = 2000
 
 function scoreInput() {
   targetScore = +this.value()
