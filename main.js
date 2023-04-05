@@ -85,8 +85,8 @@ function showMainScreen() {
 function keyPressed() {
 	// Allow the user to reset the game via a special button
 	if (key === 'F2') {
-    state = MAIN_SCREEN_STATE
-    currentMode.onReturnToMenu()
+		state = MAIN_SCREEN_STATE
+		currentMode.onReturnToPreviousScreen()
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
 	} else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }

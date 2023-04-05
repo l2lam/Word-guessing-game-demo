@@ -23,7 +23,7 @@ class ConfigurationScreen extends Screen {
 				0,
 				buttonRadius,
 				() => {this._returnToPreviousScreen = true
-					this.onReturnToMenu()},
+					this.onReturnToPreviousScreen()},
 				() => {fill('grey')
 					textSize(40)}
 			)
@@ -34,7 +34,7 @@ class ConfigurationScreen extends Screen {
 		})
 	}
 
-	onReturnToMenu() {
+	onReturnToPreviousScreen() {
 		file_input.style.display = 'none'
 		file_selector.style.display = 'none'
 	}

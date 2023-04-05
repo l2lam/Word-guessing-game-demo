@@ -21,6 +21,9 @@ class Screen {
     return [];
   }
 
+  /** To be called when returning to previous screen */
+  onReturnToPreviousScreen() {}
+
   returnToPreviousScreen() {
     return this._returnToPreviousScreen;
   }
