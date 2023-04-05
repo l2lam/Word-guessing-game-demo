@@ -86,9 +86,7 @@ function keyPressed() {
 	// Allow the user to reset the game via a special button
 	if (key === 'F2') {
     state = MAIN_SCREEN_STATE
-    // TODO: put into a "hide" function in options.js
-    file_input.style.display = "none"
-    file_selector.style.display = "none"
+    currentMode.onReturnToMenu()
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
 	} else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
