@@ -143,6 +143,7 @@ class Game extends Screen {
 					this.drawFailedMessage()
 					playPuzzleFailedSound()
 					this.score = 0
+					this.numPhrases--
 					this.gotoNextLevel()
 					this.pause(5000)
 					break
@@ -312,7 +313,7 @@ class Game extends Screen {
 			// Choose a phrase at random from the phrase bank
 			let phraseIndex = Math.floor(random(0, this.phrases.length))
 			this.curPhrase = this.phrases[phraseIndex]
-			// Remove the selected phrase from the options so it is not choosen again.
+			// Remove the selected phrase from the options so it is not chosen again.
 			this.phrases.splice(phraseIndex, 1)
 
 			// Initialize global game values
