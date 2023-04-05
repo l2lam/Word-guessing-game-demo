@@ -49,8 +49,7 @@ function setup() {
 			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
 		button.mousePressed(() => {
-			print(Number.isInteger(targetScore))
-			if (Number.isInteger(targetScore) === true) {
+			if (Number.isInteger(targetScore) === true && targetScore > 0) {
 				currentMode = modes[i]
 				currentMode.init()
 				modeSelectButtons.forEach((b) => b.hide())
