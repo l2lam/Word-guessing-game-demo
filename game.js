@@ -23,8 +23,9 @@ class Game extends Screen {
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 1 // The current level
-		this.phrases = defaultPhrases.slice() // Copy the original list of phrases
-		this.numPhrases = this.phrases.length // The total number of phrases in the game
+		this.phrases = []
+		this.defaultPhrases = defaultPhrases.slice() // Copy the original list of phrases
+		this.numPhrases = this.defaultPhrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
@@ -42,9 +43,8 @@ class Game extends Screen {
 	}
 
 	/** Game initialization */
-	init(phrases) {
+	init() {
 		this._returnToPreviousScreen = false
-		this.setupPhrases(phrases)
 	}
 
 	createButtons() {
@@ -85,6 +85,7 @@ class Game extends Screen {
 
 	/** Calculate the current game state */
 	gameState() {
+		console.log(this.guess)
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
@@ -100,9 +101,10 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
-	setupPhrases(phrases) {
+	overridePhrases(phrases) {
 		this.phrases = phrases.slice() // Copy the new list of phrases
-			this.numPhrases = this.phrases.length
+		this.numPhrases = this.phrases.length
+		this.level = 0
 		this.gotoNextLevel()
 	}
   
