@@ -318,19 +318,17 @@ class Game extends Screen {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		this.calculatePointsToGo()
 		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
 		text('Only ' + (this.calculatePointsToGo()) + ' points to go!', width / 2, LINE_SPACING * 14)
 	}
 
-	calculatePointsToGo(pointsToGo) {
+	calculatePointsToGo() {
 		if (this.score >= targetScore) {
-			pointsToGo = 0
+			return 0
 		  }
 		  else {
-			pointsToGo = targetScore - this.score
+			return targetScore - this.score
 		  }
-		  return pointsToGo
 	}
 
 	drawLivesRemaining() {
