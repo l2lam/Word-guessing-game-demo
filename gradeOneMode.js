@@ -5,15 +5,17 @@ class gradeOneGame extends game(){
   
   gameStatSolved(){
   if (this.score > 300){
-    
+
   }else if (this.score >= 3000){
     
-  }else if (this.score >= 700){
+  }else if (this.score >= 700){ 
     
   }else if (this.score > 1500){
     
   }else if (this.score > 500){
-    
+    loadImage('assets/small_mid.gif', img => {
+    image(img, 0, 0);
+  });
   }
   this.drawSolvedMessage()
 	this.level++
@@ -22,3 +24,5 @@ class gradeOneGame extends game(){
 	this.pause(3000)
   }
 }
+
+
