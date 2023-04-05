@@ -186,61 +186,62 @@ class Game extends Screen {
 	}
 
 	drawBackground() {
-		if (!this.bgImage) return;
-		var modifiedImage = this.bgImage;
-
-		// if screen too tall
-		if (height > modifiedImage.height) {
-			// scale image proportionally to screen height
-			modifiedImage.resize(0, height);
-		}
-		// if screen too short
-		else if (height < modifiedImage.height) {
-			var yPos;
-			switch (bgVerticalAlign) {
-				case BackgroundVerticalAlignment.TOP:
-					yPos = 0;
-					break;
-				case BackgroundVerticalAlignment.CENTER:
-					yPos = Math.floor((modifiedImage.height / 2.0) - (height / 2.0));
-					break;
-				case BackgroundVerticalAlignment.BOTTOM:
-					yPos = modifiedImage.height - height;
-					break;
-				default:
-					print("Invalid vertical alignment specified for background, defaulting to top");
-					yPos = 0;
+		if (this.bgImage) {
+			var modifiedImage = this.bgImage;
+			// if screen too tall
+			if (height > modifiedImage.height) {
+				// scale image proportionally to screen height
+				modifiedImage.resize(0, height);
 			}
-			// crop image to screen height and keep width
-			modifiedImage = modifiedImage.get(0, yPos, modifiedImage.width, height);
-		}
-		// if screen too wide
-		if (width > modifiedImage.width) {
-			// scale image proportionally to screen width
-			modifiedImage.resize(width, 0);
-		}
-		// if screen too thin
-		else if (width < modifiedImage.width) {
-			var xPos;
-			switch (bgHorizontalAlign) {
-				case BackgroundHorizontalAlignment.LEFT:
-					xPos = 0;
-					break;
-				case BackgroundHorizontalAlignment.CENTER:
-					xPos = Math.floor((modifiedImage.width / 2.0) - (width / 2.0));
-					break;
-				case BackgroundHorizontalAlignment.RIGHT:
-					xPos = modifiedImage.width - width;
-					break;
-				default:
-					print("Invalid horizontal alignment specified for background, defaulting to left");
-					xPos = 0;
+			// if screen too short
+			else if (height < modifiedImage.height) {
+				var yPos;
+				switch (bgVerticalAlign) {
+					case BackgroundVerticalAlignment.TOP:
+						yPos = 0;
+						break;
+					case BackgroundVerticalAlignment.CENTER:
+						yPos = Math.floor((modifiedImage.height / 2.0) - (height / 2.0));
+						break;
+					case BackgroundVerticalAlignment.BOTTOM:
+						yPos = modifiedImage.height - height;
+						break;
+					default:
+						print("Invalid vertical alignment specified for background, defaulting to top");
+						yPos = 0;
+				}
+				// crop image to screen height and keep width
+				modifiedImage = modifiedImage.get(0, yPos, modifiedImage.width, height);
 			}
-			// crop image to screen width and keep height
-			modifiedImage = modifiedImage.get(xPos, 0, width, modifiedImage.height);
+			// if screen too wide
+			if (width > modifiedImage.width) {
+				// scale image proportionally to screen width
+				modifiedImage.resize(width, 0);
+			}
+			// if screen too thin
+			else if (width < modifiedImage.width) {
+				var xPos;
+				switch (bgHorizontalAlign) {
+					case BackgroundHorizontalAlignment.LEFT:
+						xPos = 0;
+						break;
+					case BackgroundHorizontalAlignment.CENTER:
+						xPos = Math.floor((modifiedImage.width / 2.0) - (width / 2.0));
+						break;
+					case BackgroundHorizontalAlignment.RIGHT:
+						xPos = modifiedImage.width - width;
+						break;
+					default:
+						print("Invalid horizontal alignment specified for background, defaulting to left");
+						xPos = 0;
+				}
+				// crop image to screen width and keep height
+				modifiedImage = modifiedImage.get(xPos, 0, width, modifiedImage.height);
+			}
+			background(modifiedImage, 100);
+		} else {
+			print("Background image invalid, background not changed.");
 		}
-
-		background(modifiedImage, 100);
 	}
 
 	drawMainScreen() {
