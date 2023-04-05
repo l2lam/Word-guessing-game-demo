@@ -46,6 +46,20 @@ class Game extends Screen {
 	/** Game initialization */
 	init() {
 		this._returnToPreviousScreen = false
+		this.noGuessChar = '_'
+		this.livesRemaining = 0
+		this.guess = []
+		this.wrongGuesses = []
+		this.score = 0
+		this.currentSpinOption = new SpinOption(100)
+		this.spinCount = 0 // The number of times to spin for points
+		this.spinResultSequence = 0
+		this.level = 0 // The current level
+		this.correctLetterIndices = []
+		this.incorrectGuessChar = null
+		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
+		this.puzzleRevealCountdown = 0
+		this.gotoNextLevel()
 	}
 
 	createButtons() {
@@ -118,7 +132,7 @@ class Game extends Screen {
         		case GameStates.GAME_WIN:
           			this.drawWinScreen()
 					playPuzzleSolvedSound()
-					this.pause(10)
+
 					this.returntoMenuAfterWin()
           			break
 
@@ -364,21 +378,6 @@ class Game extends Screen {
 	}
 
 	returntoMenuAfterWin() {
-			
-			this.noGuessChar = '_'
-    		this.livesRemaining = 0
-			this.guess = []
-			this.wrongGuesses = []
-			this.score = 0
-			this.currentSpinOption = new SpinOption(100)
-			this.spinCount = 0 // The number of times to spin for points
-			this.spinResultSequence = 0
-			this.level = 0 // The current level
-			this.correctLetterIndices = []
-			this.incorrectGuessChar = null
-			this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
-			this.puzzleRevealCountdown = 0
-   	 		this.gotoNextLevel()
 			state = MAIN_SCREEN_STATE
 	}
 
