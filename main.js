@@ -4,7 +4,7 @@ const PLAY_STATE = 1
 let state = MAIN_SCREEN_STATE
 
 // Mode selection buttons stuff
-let modes, currentMode, optionsButton, targetScoreInput
+let modes, currentMode, optionsButton, targetScoreInput 
 let modeSelectButtons = []
 
 // The frame rate
@@ -49,12 +49,16 @@ function setup() {
 			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
 		button.mousePressed(() => {
-			if (Number.isInteger(targetScore) === true && targetScore > 0) {
+			if (Number.isInteger(targetScore) == true && targetScore > 0 && targetScore <= 1000000) {
+				inValidScore = false
 				currentMode = modes[i]
 				currentMode.init()
 				modeSelectButtons.forEach((b) => b.hide())
       			targetScoreInput.hide()
 				state = PLAY_STATE
+			}
+			else {
+				inValidScore = true
 			}
 		})
 		button.hide()
@@ -86,6 +90,9 @@ function showMainScreen() {
 	text('Please select a game mode and enter target score', width / 2, 90)
 	modeSelectButtons.forEach((b) => b.show())
 	targetScoreInput.show()
+	if (invalidScore) {
+		
+	}
 }
 
 function keyPressed() {
@@ -96,6 +103,7 @@ function keyPressed() {
 }
 
 let targetScore = 2000
+let invalidScore = false
 
 function scoreInput() {
   targetScore = +this.value()
