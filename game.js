@@ -281,7 +281,7 @@ class Game extends Screen {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
 		}
 		this.drawTargetScore()
-
+		this.drawProgressBar()
 		this.buttons.forEach((b) => b.render())
 	}
 
@@ -342,6 +342,24 @@ class Game extends Screen {
 		strokeWeight(4)
 		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
 		text('Only ' + (this.calculatePointsToGo()) + ' points to go!', width / 2, LINE_SPACING * 14)
+	}
+
+	drawProgressBar() {
+		push()
+		strokeWeight(40)
+		stroke(0, 255, 0, 100)
+		line(width / 2 - 100, LINE_SPACING + 750, width / 2 + 100, LINE_SPACING + 750)
+		stroke(0, 255, 0)
+		let percentComplete
+		let progressBarEndPoint = width / 2 - 100
+		if(this.score >= targetScore) {
+			percentComplete = 200
+		}
+		else {
+			percentComplete = Math.floor(this.score / targetScore * 200)
+		}
+		line(progressBarEndPoint, LINE_SPACING + 750, progressBarEndPoint + percentComplete, LINE_SPACING + 750)
+		pop()
 	}
 
 	calculatePointsToGo() {
