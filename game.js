@@ -363,7 +363,7 @@ class Game extends Screen {
 	}
 
 	calculatePointsToGo() {
-		if (this.score >= targetScore) {
+		return Math.max(0, targetScore - this.score)
 			return 0
 		  }
 		  else {
