@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html>
+
+  <style>
+    .fileSelection {
+      position: fixed;
+      left: 46.5%;
+      top: 20%;
+      display: none;
+    }
+  </style>
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -7,23 +17,33 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/addons/p5.sound.min.js"></script>
-    <script src="
-https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js
-"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    
+    
     <input
+      class="fileSelection"
       type="file"
-      id="file-selector"
+      id="file-input"
       accept=".csv"
       style="
-        width: 200px;
-        height: 100px;
+        width: 145px;
+        height: 34px;
         font-size: 24px;
-        position: absolute;
-        left: 189px;
-        top: 263px;
-        display: none;
+      "/>
+    <select 
+      class="fileSelection"
+      name="selected file" 
+      id="file-selector" 
+      style="
+        width: 150px; 
+        height: 30px; 
+        font-size: 15px; 
+        position: fixed; 
+        top: 180px; 
       "
-    />
+    >
+      <option value="default">default</option>
+    </select>
   </head>
 
   <body>
