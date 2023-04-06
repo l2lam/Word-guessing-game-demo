@@ -49,6 +49,7 @@ function setup() {
 			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
 		button.mousePressed(() => {
+			
 			if (Number.isInteger(targetScore) == true && targetScore > 0 && targetScore <= 1000000) {
 				inValidScore = false
 				currentMode = modes[i]
@@ -86,13 +87,16 @@ function showMainScreen() {
 	textSize(30)
 	text('Char Char Bang!', width / 2, 60)
 	textSize(30)
-	fill(150, 150, 150)
-	text('Please select a game mode and enter target score', width / 2, 90)
+	if(inValidScore) {
+		fill(255, 0, 0)
+		text('Invalid target score', width / 2, 90)
+	}
+	else {
+		fill(150, 150, 150)
+		text('Please select a game mode and enter target score', width / 2, 90)
+	}
 	modeSelectButtons.forEach((b) => b.show())
 	targetScoreInput.show()
-	if (invalidScore) {
-		
-	}
 }
 
 function keyPressed() {
@@ -103,7 +107,7 @@ function keyPressed() {
 }
 
 let targetScore = 2000
-let invalidScore = false
+let inValidScore = false
 
 function scoreInput() {
   targetScore = +this.value()
