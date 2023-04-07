@@ -348,7 +348,8 @@ class Game extends Screen {
 		push()
 		strokeWeight(40)
 		stroke(0, 255, 0, 100)
-		line(width / 2 - 100, LINE_SPACING + 750, width / 2 + 100, LINE_SPACING + 750)
+		let progressBarY = LINE_SPACING + 750
+		line(width / 2 - 100, progressBarY, width / 2 + 100, progressBarY)
 		stroke(0, 255, 0)
 		let percentComplete
 		let progressBarEndPoint = width / 2 - 100
@@ -358,7 +359,7 @@ class Game extends Screen {
 		else {
 			percentComplete = Math.floor(this.score / targetScore * 200)
 		}
-		line(progressBarEndPoint, LINE_SPACING + 750, progressBarEndPoint + percentComplete, LINE_SPACING + 750)
+		line(progressBarEndPoint, progressBarY, progressBarEndPoint + percentComplete, progressBarY)
 		pop()
 	}
 
