@@ -4,8 +4,10 @@ const BUTTON_GAP = 10;
 
 /** A base class for a screen: analogous to a page, scene, etc. */
 class Screen {
-  constructor() {
+  constructor(name, description) {
     this._returnToPreviousScreen = false;
+	  this.name = name;
+	  this.description = description;
   }
 
   /** Initialization of elements/components/states in the screen */
@@ -18,6 +20,9 @@ class Screen {
   paintedButtons() {
     return [];
   }
+
+  /** To be called when returning to previous screen */
+  onReturnToPreviousScreen() {}
 
   returnToPreviousScreen() {
     return this._returnToPreviousScreen;

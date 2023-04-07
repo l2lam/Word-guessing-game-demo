@@ -12,8 +12,8 @@ const GameStates = {
 }
 
 class Game extends Screen {
-	constructor(phrases, noGuessChar = '_', lives = 3, bgImage = null) {
-		super()
+	constructor(name, description, defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null) {
+		super(name, description)
 		this.bgImage = bgImage
     	this.winImage = loadImage('assets/winscreen.jpg')
 		this.noGuessChar = noGuessChar
@@ -26,8 +26,9 @@ class Game extends Screen {
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 1 // The current level
-		this.phrases = phrases.slice() // Copy the original list of phrases
-		this.numPhrases = this.phrases.length // The total number of phrases in the game
+		this.phrases = []
+		this.defaultPhrases = defaultPhrases.slice() // Copy the original list of phrases
+		this.numPhrases = this.defaultPhrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
@@ -63,6 +64,7 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
 		this.gotoNextLevel()
+		this.setupPhrases()
 	}
 
 	createButtons() {
@@ -122,6 +124,18 @@ class Game extends Screen {
 	}
 
   	// Draw the game screen(s)
+	setupPhrases() {
+		if (file_selector.selectedIndex !== 0) {
+			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
+		} else {
+			this.phrases = this.defaultPhrases
+		}
+		this.numPhrases = this.phrases.length
+		this.level = 0
+		this.gotoNextLevel()
+	}
+  
+	// Draw the game screen(s)
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {
 			// Do nothing - ie. pause rendering
@@ -177,6 +191,7 @@ class Game extends Screen {
 					this.drawFailedMessage()
 					playPuzzleFailedSound()
 					this.score = 0
+					this.numPhrases--
 					this.gotoNextLevel()
 					this.pause(5000)
 					break
@@ -383,7 +398,7 @@ class Game extends Screen {
 			// Choose a phrase at random from the phrase bank
 			let phraseIndex = Math.floor(random(0, this.phrases.length))
 			this.curPhrase = this.phrases[phraseIndex]
-			// Remove the selected phrase from the options so it is not choosen again.
+			// Remove the selected phrase from the options so it is not chosen again.
 			this.phrases.splice(phraseIndex, 1)
 
 			// Initialize global game values

@@ -22,12 +22,12 @@ function setup() {
 
 	// Setup all the supported modes here so that p5js lib facilities are made available to the constructors
 	modes = [
-		new GameMode('☰', '', new ConfigurationScreen()),
-		new GameMode('Grade One', '', new Game(gradeOnePhrases, '🍪', 5, loadImage('assets/candy.jpg'))),
-		new GameMode('Grade Ten+', '', new Game(standardPhrases, '_', 3, loadImage('assets/candy.jpg'))),
+		new ConfigurationScreen('☰', ''),
+		new Game('Grade One', '', gradeOnePhrases, '🍪', 5, loadImage('assets/candy.jpg')),
+		new Game('Grade Ten+', '', standardPhrases, '_', 3, loadImage('assets/candy.jpg')),
 	]
 
-	file_selector.addEventListener('change', (event) => {
+	file_input.addEventListener('change', (event) => {
 		addNewCsvPhraseList(event)
 	})
 
@@ -41,6 +41,7 @@ function setup() {
 	for (let i = 0; i < modes.length; i++) {
 		let mode = modes[i]
 		let button = createButton(mode.name)
+    button.attribute('name', mode.name)
 		button.size(BUTTON_WIDTH, BUTTON_HEIGHT)
 		button.style('font-size', '24px')
 		button.position(
@@ -101,9 +102,11 @@ function showMainScreen() {
 
 function keyPressed() {
 	// Allow the user to reset the game via a special button
-	if (key === 'F2') state = MAIN_SCREEN_STATE
+	if (key === 'F2') {
+		state = MAIN_SCREEN_STATE
+		currentMode.onReturnToPreviousScreen()
 	// Otherwise we ignore the shift key and pass the input to the game for processing.
-	else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
+	} else if (key !== 'Shift' && currentMode) currentMode.processKeyInput(key)
 }
 
 let targetScore = 2000
