@@ -364,11 +364,6 @@ class Game extends Screen {
 
 	calculatePointsToGo() {
 		return Math.max(0, targetScore - this.score)
-			return 0
-		  }
-		  else {
-			return targetScore - this.score
-		  }
 	}
 
 	drawLivesRemaining() {

@@ -33,7 +33,7 @@ function setup() {
 
 	// Set the frame rate
 	frameRate(fr)
-  targetScoreInput = createInput('')
+  targetScoreInput = createInput(targetScore)
   targetScoreInput.position((width / 2) - 50, 120)
   targetScoreInput.size(100)
   targetScoreInput.input(scoreInput)
@@ -50,7 +50,7 @@ function setup() {
 		)
 		button.mousePressed(() => {
 			
-			if (Number.isInteger(targetScore) == true && targetScore > 0 && targetScore <= 1000000) {
+			if (Number.isInteger(+targetScore) == true && targetScore > 0 && targetScore <= 1000000) {
 				inValidScore = false
 				currentMode = modes[i]
 				currentMode.init()
@@ -110,8 +110,9 @@ let targetScore = 2000
 let inValidScore = false
 
 function scoreInput() {
-  targetScore = +this.value()
+  targetScore = this.value()
 }
+
 function mousePressed() {
 	if (currentMode) {
 		let paintedButtons = currentMode.paintedButtons()
