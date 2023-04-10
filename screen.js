@@ -16,7 +16,13 @@ class Screen {
     BOTTOM: 'Bottom',
   }
 
-  constructor(name, description, bgImage = null, bgHorizontalAlign = null, bgVerticalAlign = null) {
+  constructor(
+		name,
+		description,
+		bgImage = null,
+		bgHorizontalAlign = BgHorizontalAlign.CENTER,
+		bgVerticalAlign = BgVerticalAlign.CENTER
+	) {
     this._returnToPreviousScreen = false;
 	  this.name = name;
     this.bgImage = bgImage;
