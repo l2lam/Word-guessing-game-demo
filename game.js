@@ -7,12 +7,15 @@ const GameStates = {
 	SPINNING: 'Spinning for points',
 	SPINNING_FINISHED: 'Spinning completed',
 	SOLVED: 'Puzzle solved',
+	QUIT: 'Quit game',
+	WIN: 'Game win'
 }
 
 class Game extends Screen {
-	constructor(name, description, phrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
+	constructor(name, description, defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
+    this.winImage = loadImage('assets/winscreen.jpg')
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -23,8 +26,9 @@ class Game extends Screen {
 		this.spinCount = 0 // The number of times to spin for points
 		this.spinResultSequence = 0
 		this.level = 1 // The current level
-		this.phrases = phrases.slice() // Copy the original list of phrases
-		this.numPhrases = this.phrases.length // The total number of phrases in the game
+		this.phrases = []
+		this.defaultPhrases = defaultPhrases.slice() // Copy the original list of phrases
+		this.numPhrases = this.defaultPhrases.length // The total number of phrases in the game
 		this.correctLetterIndices = []
 		this.incorrectGuessChar = null
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
@@ -43,8 +47,23 @@ class Game extends Screen {
 
 	/** Game initialization */
 	init() {
+		this.hasWon = false
+		this.quitGame = false
 		this._returnToPreviousScreen = false
-		this.drawBackground()
+		this.livesRemaining = 0
+		this.guess = []
+		this.wrongGuesses = []
+		this.score = 0
+		this.currentSpinOption = new SpinOption(100)
+		this.spinCount = 0 // The number of times to spin for points
+		this.spinResultSequence = 0
+		this.level = 0 // The current level
+		this.correctLetterIndices = []
+		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
+		this.puzzleRevealCountdown = 0
+		this.gotoNextLevel()
+		this.setupPhrases()
+    this.drawBackground()
 	}
 
 	createButtons() {
@@ -88,7 +107,10 @@ class Game extends Screen {
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
-		if (!this.guess.includes(this.noGuessChar)) return GameStates.SOLVED
+		let gameSolved = !this.guess.includes(this.noGuessChar)
+    	if (this.quitGame) return GameStates.QUIT
+		if (gameSolved) return GameStates.SOLVED
+		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
@@ -100,6 +122,18 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
+  	// Draw the game screen(s)
+	setupPhrases() {
+		if (file_selector.selectedIndex !== 0) {
+			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
+		} else {
+			this.phrases = this.defaultPhrases
+		}
+		this.numPhrases = this.phrases.length
+		this.level = 0
+		this.gotoNextLevel()
+	}
+  
 	// Draw the game screen(s)
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {
@@ -110,6 +144,16 @@ class Game extends Screen {
 					this.drawGameOver()
 					playGameOverSound()
 					break
+
+				case GameStates.WIN:
+					this.drawWinScreen()
+					this.pause(5000)
+					this.quitGame = true
+					break
+
+        		case GameStates.QUIT:
+					this._returnToPreviousScreen = true
+          			break
 
 				case GameStates.SPINNING:
 					let option = random(this.spinOptions)
@@ -133,17 +177,20 @@ class Game extends Screen {
 					break
 
 				case GameStates.SOLVED:
+					if (this.score >= targetScore) this.hasWon = true
 					this.drawSolvedMessage()
 					this.level++
 					this.gotoNextLevel()
 					playPuzzleSolvedSound()
 					this.pause(3000)
 					break
+			
 
 				case GameStates.PUZZLE_UNSUCCESSFUL:
 					this.drawFailedMessage()
 					playPuzzleFailedSound()
 					this.score = 0
+					this.numPhrases--
 					this.gotoNextLevel()
 					this.pause(5000)
 					break
@@ -177,6 +224,10 @@ class Game extends Screen {
 		this.drawPuzzle()
 		this.drawBottomBar()
 	}
+
+  	drawWinScreen() {
+    	image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
+  	}
 
 	drawSolvedMessage() {
 		drawMessage(
@@ -239,7 +290,8 @@ class Game extends Screen {
 		if (this.wrongGuesses.length > 1) {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
 		}
-
+		this.drawTargetScore()
+		this.drawProgressBar()
 		this.buttons.forEach((b) => b.render())
 	}
 
@@ -293,6 +345,38 @@ class Game extends Screen {
 		text(this.score, width / 2, LINE_SPACING)
 	}
 
+	drawTargetScore() {
+		textAlign(CENTER, CENTER)
+		textSize(30)
+		fill(255, 255, 250)
+		strokeWeight(4)
+		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
+		text('Only ' + (this.calculatePointsToGo()) + ' points to go!', width / 2, LINE_SPACING * 14)
+	}
+
+	drawProgressBar() {
+		push()
+		strokeWeight(40)
+		stroke(0, 255, 0, 100)
+		let progressBarY = LINE_SPACING + 750
+		line(width / 2 - 100, progressBarY, width / 2 + 100, progressBarY)
+		stroke(0, 255, 0)
+		let percentComplete
+		let progressBarEndPoint = width / 2 - 100
+		if(this.score >= targetScore) {
+			percentComplete = 200
+		}
+		else {
+			percentComplete = Math.floor(this.score / targetScore * 200)
+		}
+		line(progressBarEndPoint, progressBarY, progressBarEndPoint + percentComplete, progressBarY)
+		pop()
+	}
+
+	calculatePointsToGo() {
+		return Math.max(0, targetScore - this.score)
+	}
+
 	drawLivesRemaining() {
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
@@ -309,7 +393,7 @@ class Game extends Screen {
 			// Choose a phrase at random from the phrase bank
 			let phraseIndex = Math.floor(random(0, this.phrases.length))
 			this.curPhrase = this.phrases[phraseIndex]
-			// Remove the selected phrase from the options so it is not choosen again.
+			// Remove the selected phrase from the options so it is not chosen again.
 			this.phrases.splice(phraseIndex, 1)
 
 			// Initialize global game values
@@ -363,3 +447,5 @@ class Game extends Screen {
 		}
 	}
 }
+
+
