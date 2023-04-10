@@ -20,8 +20,8 @@ class Screen {
 		name,
 		description,
 		bgImage = null,
-		bgHorizontalAlign = BgHorizontalAlign.CENTER,
-		bgVerticalAlign = BgVerticalAlign.CENTER
+		bgHorizontalAlign = Screen.BgHorizontalAlign.CENTER,
+		bgVerticalAlign = Screen.BgVerticalAlign.CENTER
 	) {
     this._returnToPreviousScreen = false;
 	  this.name = name;
