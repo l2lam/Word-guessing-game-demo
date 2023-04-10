@@ -19,12 +19,14 @@ class Screen {
   constructor(
 		name,
 		description,
+		bgColor = null,
 		bgImage = null,
 		bgHorizontalAlign = Screen.BgHorizontalAlign.CENTER,
 		bgVerticalAlign = Screen.BgVerticalAlign.CENTER
 	) {
     this._returnToPreviousScreen = false;
 	  this.name = name;
+		this.bgColor = bgColor;
     this.bgImage = bgImage;
     this.bgHorizontalAlign = bgHorizontalAlign;
     this.bgVerticalAlign = bgVerticalAlign;
@@ -37,13 +39,20 @@ class Screen {
 
   /** Draw the background to the screen */
 	drawBackground() {
-		// try formatting the background if it is null
-		if (!this.formattedBgImage) {
-			this.formattedBgImage = this.formatBackground();
-		}
-		// only set the background if the resulting image is non-null
-		if (this.formattedBgImage) {
-			background(this.formattedBgImage, 100);
+		if (this.bgColor && this.bgImage) {
+			print("Error: Both a background color and image were specified. Defaulting to color.");
+			background(this.bgColor);
+		} else if (this.bgColor) {
+			background(this.bgColor);
+		} else if (this.bgImage) {
+			// try formatting the background if it is null
+			if (!this.formattedBgImage) {
+				this.formattedBgImage = this.formatBackground();
+			}
+			// only set the background if the resulting image is non-null
+			if (this.formattedBgImage) {
+				background(this.formattedBgImage, 100);
+			}
 		}
 	}
 
@@ -103,8 +112,8 @@ class Screen {
 			}
   		return modifiedBackground;
 		} else {
-			// if no image is specified in constructor
-			return null;
+			// perform no operation to the background
+			return this.bgImage;
 		}
   }
 

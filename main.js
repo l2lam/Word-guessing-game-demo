@@ -22,7 +22,7 @@ function setup() {
 
 	// Setup all the supported modes here so that p5js lib facilities are made available to the constructors
 	modes = [
-		new ConfigurationScreen('☰', ''),
+		new ConfigurationScreen('☰', '', color(50, 150, 150)),
 		new Game('Grade One', '', gradeOnePhrases, '🍪', 5, loadImage('assets/candy.jpg'), Screen.BgHorizontalAlign.CENTER, Screen.BgVerticalAlign.BOTTOM),
 		new Game('Grade Ten+', '', standardPhrases, '_', 3, loadImage('assets/candy.jpg'), Screen.BgHorizontalAlign.CENTER, Screen.BgVerticalAlign.BOTTOM),
 	]

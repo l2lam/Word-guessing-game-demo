@@ -11,7 +11,7 @@ const GameStates = {
 
 class Game extends Screen {
 	constructor(name, description, phrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
-		super(name, description, bgImage, bgHorizontalAlign, bgVerticalAlign)
+		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
