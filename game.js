@@ -244,7 +244,7 @@ class Game extends Screen {
 	}
 
 	drawGameOver() {
-		this.drawBackground();
+		this.drawBackground()
 		fill(255, 0, 0)
 		textAlign(CENTER, CENTER)
 		textSize(70)
