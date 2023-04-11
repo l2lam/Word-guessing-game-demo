@@ -4,8 +4,6 @@ const file_selector = document.getElementById('file-selector')
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {
 		super(name, description, bgColor)
-	constructor(name, description, bgColor) {
-		super(name, description, bgColor)
 		this.createButtons()
 	}
 
