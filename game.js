@@ -63,7 +63,6 @@ class Game extends Screen {
 		this.puzzleRevealCountdown = 0
 		this.gotoNextLevel()
 		this.setupPhrases()
-    this.drawBackground()
 	}
 
 	createButtons() {
