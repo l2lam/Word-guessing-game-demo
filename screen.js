@@ -56,7 +56,7 @@ class Screen {
 		}
 	}
 
-  /** Fit the background to the screen */
+  /** Fit the background to the current canvas */
   formatBackground() {
     if (this.bgImage) {
 			var modifiedBackground = this.bgImage;
@@ -134,6 +134,8 @@ class Screen {
 
   /** Resize the background when the window is resized. */
   windowResized() {
+	// need to resize canvas first
     this.formattedBgImage = this.formatBackground();
+	this.drawBackground();
   }
 }

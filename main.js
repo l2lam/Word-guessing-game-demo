@@ -123,3 +123,9 @@ function mousePressed() {
 		paintedButtons.forEach((b) => b.checkForClick(mouseX, mouseY))
 	}
 }
+
+function windowResized() {
+	if (currentMode) {
+		currentMode.windowResized()
+	}
+}
