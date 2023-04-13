@@ -125,7 +125,9 @@ function mousePressed() {
 }
 
 function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
 	if (currentMode) {
-		currentMode.windowResized()
+		print("hi")
+		currentMode.resizeBackground()
 	}
 }

@@ -132,10 +132,8 @@ class Screen {
     return this._returnToPreviousScreen;
   }
 
-  /** Resize the background when the window is resized. */
-  windowResized() {
-	// need to resize canvas first
-	resizeCanvas(windowWidth, windowHeight);
+  /** Reformat background image to current canvas size. */
+  resizeBackground() {
     this.formattedBgImage = this.formatBackground();
 	this.drawBackground();
   }
