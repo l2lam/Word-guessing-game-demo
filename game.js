@@ -8,11 +8,20 @@ const GameStates = {
 	SPINNING_FINISHED: 'Spinning completed',
 	SOLVED: 'Puzzle solved',
 	QUIT: 'Quit game',
-	WIN: 'Game win'
+	WIN: 'Game win',
 }
 
 class Game extends Screen {
-	constructor(name, description, defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
+	constructor(
+		name,
+		description,
+		defaultPhrases,
+		noGuessChar = '_',
+		lives = 3,
+		bgImage = null,
+		bgHorizontalAlign,
+		bgVerticalAlign
+	) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
 		this.winImage = loadImage('assets/winscreen.jpg')
@@ -70,9 +79,13 @@ class Game extends Screen {
 		const buttonRadius = 30
 		this.buttons = [
 			// The button to spin for points
-			new PaintedButton('🎲', 0, 0, buttonRadius, () => this.onSpinButtonPressed()),
+			new PaintedButton('🎲', 0, 0, buttonRadius, () =>
+				this.onSpinButtonPressed()
+			),
 			// The button to show the on-screen keyboard
-			new PaintedButton('⌨️', 0, 0, buttonRadius, () => navigator.virtualKeyboard.show()),
+			new PaintedButton('⌨️', 0, 0, buttonRadius, () =>
+				navigator.virtualKeyboard.show()
+			),
 			// The button to quit the game and return to the previous screen
 			new PaintedButton(
 				'🛑',
@@ -88,7 +101,8 @@ class Game extends Screen {
 		let buttonBarWidth = (buttonRadius + buttonGap) * nButtons
 		this.buttons.forEach((button, i) => {
 			button.y = LINE_SPACING * 11
-			button.x = width / 2 + (buttonRadius * 2 + buttonGap) * i - buttonBarWidth / 2
+			button.x =
+				width / 2 + (buttonRadius * 2 + buttonGap) * i - buttonBarWidth / 2
 		})
 	}
 
@@ -132,7 +146,7 @@ class Game extends Screen {
 		this.level = 0
 		this.gotoNextLevel()
 	}
-  
+
 	// Draw the game screen(s)
 	render() {
 		if (this.pauseUntilMilliSecond > millis()) {
@@ -156,7 +170,9 @@ class Game extends Screen {
 
 				case GameStates.SPINNING:
 					let option = random(this.spinOptions)
-					let pauseMS = Math.ceil((this.spinCount * 400) / Math.pow(this.spinCount, 1.5))
+					let pauseMS = Math.ceil(
+						(this.spinCount * 400) / Math.pow(this.spinCount, 1.5)
+					)
 
 					this.spinCount--
 					if (this.spinCount == 0) {
@@ -169,7 +185,12 @@ class Game extends Screen {
 					break
 
 				case GameStates.SPINNING_FINISHED:
-					if (this.currentSpinOption.displayResult(millis() - this.spinResultSequence, this.score)) {
+					if (
+						this.currentSpinOption.displayResult(
+							millis() - this.spinResultSequence,
+							this.score
+						)
+					) {
 						this.spinResultSequence = 0
 						this.score = this.currentSpinOption.newScore(this.score)
 					} else this.pause(100)
@@ -183,7 +204,6 @@ class Game extends Screen {
 					playPuzzleSolvedSound()
 					this.pause(3000)
 					break
-			
 
 				case GameStates.PUZZLE_UNSUCCESSFUL:
 					this.drawFailedMessage()
@@ -225,19 +245,32 @@ class Game extends Screen {
 	}
 
 	drawWinScreen() {
-		image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
+		image(this.winImage, width / 2 - 250, height * 0.25, 500, 500)
 	}
 
 	drawSolvedMessage() {
 		drawMessage(
-			random(['Way to go!', 'Awesome', 'Wonderful', 'Yes, you so good yo!', 'I love you!', 'Well done!']),
+			random([
+				'Way to go!',
+				'Awesome',
+				'Wonderful',
+				'Yes, you so good yo!',
+				'I love you!',
+				'Well done!',
+			]),
 			this.curPhrase.phrase
 		)
 	}
 
 	drawFailedMessage() {
 		drawMessage(
-			random(['Too bad, so sad', 'Nope, better luck next time!', 'Booo!', 'Nope, fail', 'Oh poop']),
+			random([
+				'Too bad, so sad',
+				'Nope, better luck next time!',
+				'Booo!',
+				'Nope, fail',
+				'Oh poop',
+			]),
 			this.curPhrase.phrase
 		)
 	}
@@ -263,7 +296,11 @@ class Game extends Screen {
 		if (this.puzzleRevealCountdown > 0) {
 			puzzle = []
 			this.guess.forEach((c, i) =>
-				puzzle.push(c === ' ' ? c : ['Ò', 'Ó', 'Ô', 'Õ', 'Ö'][(i + this.puzzleRevealCountdown) % 5])
+				puzzle.push(
+					c === ' '
+						? c
+						: ['Ò', 'Ó', 'Ô', 'Õ', 'Ö'][(i + this.puzzleRevealCountdown) % 5]
+				)
 			)
 			this.puzzleRevealCountdown--
 			playNewPuzzleSound()
@@ -279,12 +316,18 @@ class Game extends Screen {
 		textSize(20)
 		fill(255, 100, 100)
 		text(
-			`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(' ')}`,
+			`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(
+				' '
+			)}`,
 			width / 2,
 			LINE_SPACING * 8
 		)
 
-		text(`Points per letter: ${this.currentSpinOption.perLetterScore}`, width / 2, LINE_SPACING * 9)
+		text(
+			`Points per letter: ${this.currentSpinOption.perLetterScore}`,
+			width / 2,
+			LINE_SPACING * 9
+		)
 
 		if (this.wrongGuesses.length > 1) {
 			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
@@ -349,8 +392,16 @@ class Game extends Screen {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		text('You need a total of ' + targetScore + ' points to win.', width / 2, LINE_SPACING * 13)
-		text('Only ' + (this.calculatePointsToGo()) + ' points to go!', width / 2, LINE_SPACING * 14)
+		text(
+			'You need a total of ' + targetScore + ' points to win.',
+			width / 2,
+			LINE_SPACING * 13
+		)
+		text(
+			'Only ' + this.calculatePointsToGo() + ' points to go!',
+			width / 2,
+			LINE_SPACING * 14
+		)
 	}
 
 	drawProgressBar() {
@@ -362,13 +413,17 @@ class Game extends Screen {
 		stroke(0, 255, 0)
 		let percentComplete
 		let progressBarEndPoint = width / 2 - 100
-		if(this.score >= targetScore) {
+		if (this.score >= targetScore) {
 			percentComplete = 200
+		} else {
+			percentComplete = Math.floor((this.score / targetScore) * 200)
 		}
-		else {
-			percentComplete = Math.floor(this.score / targetScore * 200)
-		}
-		line(progressBarEndPoint, progressBarY, progressBarEndPoint + percentComplete, progressBarY)
+		line(
+			progressBarEndPoint,
+			progressBarY,
+			progressBarEndPoint + percentComplete,
+			progressBarY
+		)
 		pop()
 	}
 
@@ -402,7 +457,9 @@ class Game extends Screen {
 
 			// Fill the guess array with underscores corresponding to the phrase
 			for (let i = 0; i < this.curPhrase.phrase.length; i++) {
-				this.guess.push(this.curPhrase.phrase[i] == ' ' ? ' ' : this.noGuessChar)
+				this.guess.push(
+					this.curPhrase.phrase[i] == ' ' ? ' ' : this.noGuessChar
+				)
 			}
 			this.puzzleRevealCountdown = this.curPhrase.phrase.length
 		}
@@ -446,5 +503,3 @@ class Game extends Screen {
 		}
 	}
 }
-
-
