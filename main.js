@@ -33,15 +33,15 @@ function setup() {
 
 	// Set the frame rate
 	frameRate(fr)
-  targetScoreInput = createInput(targetScore)
-  targetScoreInput.position((width / 2) - 50, 120)
-  targetScoreInput.size(100)
-  targetScoreInput.input(scoreInput)
+	targetScoreInput = createInput(targetScore)
+	targetScoreInput.position((width / 2) - 50, 120)
+	targetScoreInput.size(100)
+	targetScoreInput.input(scoreInput)
 	// Create buttons for mode selection
 	for (let i = 0; i < modes.length; i++) {
 		let mode = modes[i]
 		let button = createButton(mode.name)
-    button.attribute('name', mode.name)
+    	button.attribute('name', mode.name)
 		button.size(BUTTON_WIDTH, BUTTON_HEIGHT)
 		button.style('font-size', '24px')
 		button.position(

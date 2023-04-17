@@ -15,7 +15,7 @@ class Game extends Screen {
 	constructor(name, description, defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
-    this.winImage = loadImage('assets/winscreen.jpg')
+    	this.winImage = loadImage('assets/winscreen.jpg')
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
