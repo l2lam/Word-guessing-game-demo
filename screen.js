@@ -56,7 +56,9 @@ class Screen {
 			// only set the background if the resulting image is non-null
 			if (this.formattedBgImage) {
 				background(this.formattedBgImage, 100);
-			}
+			} else {
+        print("Error: Screen::drawBackground(): Formatting background image failed.")
+      }
 		}
 	}
 
