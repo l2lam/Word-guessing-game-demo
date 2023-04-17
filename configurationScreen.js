@@ -1,9 +1,9 @@
-const file_input = document.getElementById("file-input")
+const file_input = document.getElementById('file-input')
 const file_selector = document.getElementById('file-selector')
 
 class ConfigurationScreen extends Screen {
-	constructor(name, description) {
-		super(name, description)
+	constructor(name, description, bgColor) {
+		super(name, description, bgColor)
 		this.createButtons()
 	}
 
@@ -22,14 +22,18 @@ class ConfigurationScreen extends Screen {
 				0,
 				0,
 				buttonRadius,
-				() => {this._returnToPreviousScreen = true
-					this.onReturnToPreviousScreen()},
-				() => {fill('grey')
-					textSize(40)}
-			)
+				() => {
+					this._returnToPreviousScreen = true
+					this.onReturnToPreviousScreen()
+				},
+				() => {
+					fill('grey')
+					textSize(40)
+				}
+			),
 		]
 		this.buttons.forEach((button, i) => {
-			button.y = height * (5/8)
+			button.y = height * (5 / 8)
 			button.x = width / 2
 		})
 	}
@@ -44,7 +48,7 @@ class ConfigurationScreen extends Screen {
 	}
 
 	render() {
-		background(50, 150, 150)
+		this.drawBackground()
 		fill(0, 50, 50)
 		textAlign(CENTER, CENTER)
 		textSize(30)
