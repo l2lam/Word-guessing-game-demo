@@ -69,7 +69,6 @@ function setup() {
 }
 
 function draw() {
-	clear(); // clear previous screen contents
 	switch (state) {
 		case MAIN_SCREEN_STATE:
 			showMainScreen()
