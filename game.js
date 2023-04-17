@@ -15,7 +15,7 @@ class Game extends Screen {
 	constructor(name, description, defaultPhrases, noGuessChar = '_', lives = 3, bgImage = null, bgHorizontalAlign, bgVerticalAlign) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
-    	this.winImage = loadImage('assets/winscreen.jpg')
+		this.winImage = loadImage('assets/winscreen.jpg')
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -107,7 +107,7 @@ class Game extends Screen {
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
 		let gameSolved = !this.guess.includes(this.noGuessChar)
-    	if (this.quitGame) return GameStates.QUIT
+		if (this.quitGame) return GameStates.QUIT
 		if (gameSolved) return GameStates.SOLVED
 		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
@@ -121,7 +121,7 @@ class Game extends Screen {
 		this.pauseUntilMilliSecond = millis() + ms
 	}
 
-  	// Draw the game screen(s)
+	// Draw the game screen(s)
 	setupPhrases() {
 		if (file_selector.selectedIndex !== 0) {
 			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
@@ -150,9 +150,9 @@ class Game extends Screen {
 					this.quitGame = true
 					break
 
-        		case GameStates.QUIT:
+				case GameStates.QUIT:
 					this._returnToPreviousScreen = true
-          			break
+					break
 
 				case GameStates.SPINNING:
 					let option = random(this.spinOptions)
@@ -224,9 +224,9 @@ class Game extends Screen {
 		this.drawBottomBar()
 	}
 
-  	drawWinScreen() {
-    	image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
-  	}
+	drawWinScreen() {
+		image(this.winImage, (width / 2) - 250, height * 0.25, 500, 500)
+	}
 
 	drawSolvedMessage() {
 		drawMessage(
