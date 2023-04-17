@@ -37,15 +37,19 @@ class Screen {
   /** Initialization of elements/components/states in the screen */
   init() {}
 
-  /** Draw the background to the screen */
+  /**
+   * Draw the background to the screen.
+   * Will set a color or image depending on whether {@link bgColor} or 
+   * {@link bgImage} are non-null. If both are non-null, sets the background
+   * to {@link bgColor}.
+   */
 	drawBackground() {
 		if (this.bgColor && this.bgImage) {
-			print("Error: Both a background color and image were specified. Defaulting to color.");
 			background(this.bgColor);
 		} else if (this.bgColor) {
 			background(this.bgColor);
 		} else if (this.bgImage) {
-			// try formatting the background if it is null
+			// try formatting the background if it isn't null
 			if (!this.formattedBgImage) {
 				this.formattedBgImage = this.formatBackground();
 			}
