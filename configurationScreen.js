@@ -1,24 +1,22 @@
-const file_input = document.getElementById("file-input")
-const file_selector = document.getElementById("file-selector")
+let customPhrases = []
 
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {
 		super(name, description, bgColor)
 		this.createControls()
 		this.createButtons()
-		this.customPhrases = []
 	}
 
 	init() {
 		this._returnToPreviousScreen = false
-		file_input.style.display = "block"
-		file_selector.style.display = "block"
 	}
 
 	createControls() {
 		this.fileInput = createInput("", "file")
+		this.fileInput.elt.accept = ".csv"
 		this.fileInput.changed((event) => {
-			print("file changed")
+			let importer = new CsvPhraseImporter(event.target.files[0])
+			customPhrases = importer.phrases
 		})
 		this.fileInput.hide()
 
@@ -40,10 +38,7 @@ class ConfigurationScreen extends Screen {
 				0,
 				buttonRadius * 2,
 				() => {
-					print(this.fileInput)
-					this.fileInput.mouseClicked()
-					let importer = new CsvPhraseImporter(this.fileInput.value())
-					this.customPhrases.push(importer.phrases)
+					this.fileInput.elt.click()
 				},
 				() => {}
 			),
@@ -68,11 +63,6 @@ class ConfigurationScreen extends Screen {
 			button.y = height * (i / n) + 300
 			button.x = width / 2
 		})
-	}
-
-	onReturnToPreviousScreen() {
-		file_input.style.display = "none"
-		file_selector.style.display = "none"
 	}
 
 	paintedButtons() {

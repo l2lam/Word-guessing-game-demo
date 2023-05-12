@@ -30,16 +30,3 @@ class CsvPhraseImporter {
 		})
 	}
 }
-
-let phraseCollectionList = [standardPhrases]
-
-function addNewCsvPhraseList(event) {
-	let importer = new CsvPhraseImporter(event)
-
-	// Creates an option in the html document and adds it to the selector
-	let option = document.createElement("option")
-	option.text = importer.fileName
-	file_selector.add(option)
-
-	phraseCollectionList.push(importer.phrases)
-}

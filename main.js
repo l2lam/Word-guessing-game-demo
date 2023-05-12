@@ -45,10 +45,6 @@ function setup() {
 		),
 	]
 
-	// file_input.addEventListener("change", (event) => {
-	// 	addNewCsvPhraseList(event)
-	// })
-
 	// Set the frame rate
 	frameRate(fr)
 	targetScoreInput = createInput(targetScore)
