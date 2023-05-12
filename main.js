@@ -4,7 +4,7 @@ const PLAY_STATE = 1
 let state = MAIN_SCREEN_STATE
 
 // Mode selection buttons stuff
-let modes, currentMode, optionsButton, targetScoreInput
+let modes, currentMode, optionsButton
 let modeSelectButtons = []
 
 // The frame rate
@@ -47,10 +47,6 @@ function setup() {
 
 	// Set the frame rate
 	frameRate(fr)
-	targetScoreInput = createInput(targetScore)
-	targetScoreInput.position(width / 2 - 50, 120)
-	targetScoreInput.size(100)
-	targetScoreInput.input(scoreInput)
 	// Create buttons for mode selection
 	for (let i = 0; i < modes.length; i++) {
 		let mode = modes[i]
@@ -64,20 +60,10 @@ function setup() {
 			(700 - modes.length * (BUTTON_HEIGHT + BUTTON_GAP) * i) / 2 - BUTTON_GAP
 		)
 		button.mousePressed(() => {
-			if (
-				Number.isInteger(+targetScore) == true &&
-				targetScore > 0 &&
-				targetScore <= 1000000
-			) {
-				inValidScore = false
-				currentMode = modes[i]
-				currentMode.init()
-				modeSelectButtons.forEach((b) => b.hide())
-				targetScoreInput.hide()
-				state = PLAY_STATE
-			} else {
-				inValidScore = true
-			}
+			currentMode = modes[i]
+			currentMode.init()
+			modeSelectButtons.forEach((b) => b.hide())
+			state = PLAY_STATE
 		})
 		button.hide()
 		modeSelectButtons.push(button)
@@ -104,15 +90,7 @@ function showMainScreen() {
 	textSize(30)
 	text("Char Char Bang!", width / 2, 60)
 	textSize(30)
-	if (inValidScore) {
-		fill(255, 0, 0)
-		text("Invalid target score", width / 2, 90)
-	} else {
-		fill(150, 150, 150)
-		text("Please select a game mode and enter target score", width / 2, 90)
-	}
 	modeSelectButtons.forEach((b) => b.show())
-	targetScoreInput.show()
 }
 
 function keyPressed() {
@@ -122,13 +100,6 @@ function keyPressed() {
 		currentMode.onReturnToPreviousScreen()
 		// Otherwise we ignore the shift key and pass the input to the game for processing.
 	} else if (key !== "Shift" && currentMode) currentMode.processKeyInput(key)
-}
-
-let targetScore = 2000
-let inValidScore = false
-
-function scoreInput() {
-	targetScore = this.value()
 }
 
 function mousePressed() {

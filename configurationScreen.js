@@ -1,4 +1,5 @@
 let customPhrases = []
+let targetScore = 2000
 
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {
@@ -29,19 +30,24 @@ class ConfigurationScreen extends Screen {
 	}
 
 	createButtons() {
-		const buttonRadius = 30
+		const buttonRadius = 60
 		this.buttons = [
 			// CSV file inport
 			new PaintedButton(
 				"Import Phrases",
 				0,
 				0,
-				buttonRadius * 2,
+				buttonRadius,
 				() => {
 					this.fileInput.elt.click()
 				},
 				() => {}
 			),
+			new PaintedButton("Set Target Score", 0, 0, buttonRadius, () => {
+				let result = parseInt(prompt("Set target score", str(targetScore)))
+				if (!isNaN(result)) targetScore = result
+				print(result, targetScore)
+			}),
 			// The button to return to the main menu
 			new PaintedButton(
 				"↩",
@@ -60,7 +66,7 @@ class ConfigurationScreen extends Screen {
 		]
 		const n = this.buttons.length
 		this.buttons.forEach((button, i) => {
-			button.y = height * (i / n) + 300
+			button.y = height * (i / n) + 200
 			button.x = width / 2
 		})
 	}
