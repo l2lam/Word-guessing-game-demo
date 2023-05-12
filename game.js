@@ -76,19 +76,19 @@ class Game extends Screen {
 
 	createButtons() {
 		const buttonGap = 20
-		const buttonRadius = 30
+		const buttonRadius = 50
 		this.buttons = [
 			// The button to spin for points
-			new PaintedButton("🎲", 0, 0, buttonRadius, () =>
+			new PaintedButton("🎲\nSpin", 0, 0, buttonRadius, () =>
 				this.onSpinButtonPressed()
 			),
 			// The button to show the on-screen keyboard
-			new PaintedButton("⌨️", 0, 0, buttonRadius, () =>
+			new PaintedButton("⌨️\nVirtual\nKeyboard", 0, 0, buttonRadius, () =>
 				navigator.virtualKeyboard.show()
 			),
 			// The button to quit the game and return to the previous screen
 			new PaintedButton(
-				"🛑",
+				"↩\nBack",
 				0,
 				0,
 				buttonRadius,

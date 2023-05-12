@@ -30,43 +30,37 @@ class ConfigurationScreen extends Screen {
 	}
 
 	createButtons() {
-		const buttonRadius = 60
 		this.buttons = [
 			// CSV file inport
-			new PaintedButton(
+			new RectangularPaintedButton(
 				"Import Phrases",
 				0,
 				0,
-				buttonRadius,
+				BUTTON_WIDTH,
 				() => {
 					this.fileInput.elt.click()
 				},
 				() => {}
 			),
-			new PaintedButton("Set Target Score", 0, 0, buttonRadius, () => {
-				let result = parseInt(prompt("Set target score", str(targetScore)))
-				if (!isNaN(result)) targetScore = result
-				print(result, targetScore)
-			}),
-			// The button to return to the main menu
-			new PaintedButton(
-				"↩",
+			new RectangularPaintedButton(
+				"Set Target Score",
 				0,
 				0,
-				buttonRadius,
+				BUTTON_WIDTH,
 				() => {
-					this._returnToPreviousScreen = true
-					this.onReturnToPreviousScreen()
-				},
-				() => {
-					fill("grey")
-					textSize(40)
+					let result = parseInt(prompt("Set target score", str(targetScore)))
+					if (!isNaN(result)) targetScore = result
 				}
 			),
+			// The button to return to the main menu
+			new RectangularPaintedButton("↩ Back", 0, 0, BUTTON_WIDTH, () => {
+				this._returnToPreviousScreen = true
+				this.onReturnToPreviousScreen()
+			}),
 		]
 		const n = this.buttons.length
 		this.buttons.forEach((button, i) => {
-			button.y = height * (i / n) + 200
+			button.y = i * (BUTTON_HEIGHT + BUTTON_GAP) + 200
 			button.x = width / 2
 		})
 	}
