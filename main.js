@@ -124,7 +124,7 @@ function showMainScreen() {
 
 function keyPressed() {
 	// Allow the user to reset the game via a special button
-	if (key === "F2") {
+	if (key === "Escape") {
 		state = MAIN_SCREEN_STATE
 		currentMode.onReturnToPreviousScreen()
 		// Otherwise we ignore the shift key and pass the input to the game for processing.
@@ -140,8 +140,7 @@ function scoreInput() {
 
 function mousePressed() {
 	if (currentMode) {
-		let paintedButtons = currentMode.paintedButtons()
-		paintedButtons.forEach((b) => b.checkForClick(mouseX, mouseY))
+		currentMode.processMousePressed()
 	}
 }
 

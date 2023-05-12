@@ -24,7 +24,6 @@ class Game extends Screen {
 	) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
-		this.winImage = loadImage("assets/winscreen.jpg")
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -57,7 +56,6 @@ class Game extends Screen {
 	/** Game initialization */
 	init() {
 		this.hasWon = false
-		this.quitGame = false
 		this._returnToPreviousScreen = false
 		this.livesRemaining = 0
 		this.guess = []
@@ -118,10 +116,9 @@ class Game extends Screen {
 	/** Calculate the current game state */
 	gameState() {
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
-		if (this.spinCount > 0) return GameStates.WIN //GameStates.SPINNING
+		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
 		let gameSolved = !this.guess.includes(this.noGuessChar)
-		if (this.quitGame) return GameStates.QUIT
 		if (gameSolved) return GameStates.SOLVED
 		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
@@ -159,14 +156,7 @@ class Game extends Screen {
 					break
 
 				case GameStates.WIN:
-					drawFireworks("You WIN!", 1.0, 0.2)
-					//this.drawWinScreen()
-					//this.pause(5000)
-					//this.quitGame = true
-					break
-
-				case GameStates.QUIT:
-					this._returnToPreviousScreen = true
+					this.drawWinScreen()
 					break
 
 				case GameStates.SPINNING:
@@ -248,7 +238,8 @@ class Game extends Screen {
 	}
 
 	drawWinScreen() {
-		image(this.winImage, width / 2 - 250, height * 0.25, 500, 500)
+		// TODO, adjust fireworks intensity and volume based on score
+		drawFireworks("You WIN!", 1.0, 0.2)
 	}
 
 	drawSolvedMessage() {
@@ -258,7 +249,7 @@ class Game extends Screen {
 				"Awesome",
 				"Wonderful",
 				"Yes, you so good yo!",
-				"I love you!",
+				"Amazing!",
 				"Well done!",
 			]),
 			this.curPhrase.phrase
@@ -476,6 +467,17 @@ class Game extends Screen {
 			} else if (keyPressed === "F4") {
 				this.onSpinButtonPressed()
 			}
+		}
+	}
+
+	processMousePressed() {
+		switch (this.gameState()) {
+			case GameStates.WIN:
+			case GameStates.GAME_OVER:
+				this._returnToPreviousScreen = true
+				break
+			default:
+				super.processMousePressed()
 		}
 	}
 
