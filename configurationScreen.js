@@ -1,5 +1,5 @@
-const file_input = document.getElementById('file-input')
-const file_selector = document.getElementById('file-selector')
+const file_input = document.getElementById("file-input")
+const file_selector = document.getElementById("file-selector")
 
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {
@@ -9,8 +9,8 @@ class ConfigurationScreen extends Screen {
 
 	init() {
 		this._returnToPreviousScreen = false
-		file_input.style.display = 'block'
-		file_selector.style.display = 'block'
+		file_input.style.display = "block"
+		file_selector.style.display = "block"
 	}
 
 	createButtons() {
@@ -18,16 +18,15 @@ class ConfigurationScreen extends Screen {
 		this.buttons = [
 			// The button to return to the main menu
 			new PaintedButton(
-				'↩',
+				"↩",
 				0,
 				0,
 				buttonRadius,
 				() => {
 					this._returnToPreviousScreen = true
-					this.onReturnToPreviousScreen()
 				},
 				() => {
-					fill('grey')
+					fill("grey")
 					textSize(40)
 				}
 			),
@@ -39,8 +38,8 @@ class ConfigurationScreen extends Screen {
 	}
 
 	onReturnToPreviousScreen() {
-		file_input.style.display = 'none'
-		file_selector.style.display = 'none'
+		file_input.style.display = "none"
+		file_selector.style.display = "none"
 	}
 
 	paintedButtons() {
@@ -52,7 +51,7 @@ class ConfigurationScreen extends Screen {
 		fill(0, 50, 50)
 		textAlign(CENTER, CENTER)
 		textSize(30)
-		text('Please select a .csv file', width / 2, 60)
+		text("Please select a .csv file", width / 2, 60)
 		this.buttons.forEach((b) => b.render())
 	}
 }
