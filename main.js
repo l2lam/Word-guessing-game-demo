@@ -8,7 +8,7 @@ let modes, currentMode, optionsButton
 let modeSelectButtons = []
 
 // The frame rate
-const fr = 10
+const fr = 20
 
 // This function is automatically run before setup to do things
 // that may take a little while to finish
@@ -18,7 +18,7 @@ function preload() {
 
 function setup() {
 	// Make the drawing canvas as big as the window
-	createCanvas(windowWidth, windowHeight)
+	const c = createCanvas(windowWidth, windowHeight)
 
 	// Setup all the supported modes here so that p5js lib facilities are made available to the constructors
 	modes = [
@@ -77,7 +77,10 @@ function draw() {
 			break
 		case PLAY_STATE:
 			currentMode.render()
-			if (currentMode.returnToPreviousScreen()) state = MAIN_SCREEN_STATE
+			if (currentMode.returnToPreviousScreen()) {
+				currentMode.onReturnToPreviousScreen()
+				state = MAIN_SCREEN_STATE
+			}
 			break
 	}
 }
@@ -95,7 +98,7 @@ function showMainScreen() {
 
 function keyPressed() {
 	// Allow the user to reset the game via a special button
-	if (key === "F2") {
+	if (key === "Escape") {
 		state = MAIN_SCREEN_STATE
 		currentMode.onReturnToPreviousScreen()
 		// Otherwise we ignore the shift key and pass the input to the game for processing.
@@ -104,8 +107,7 @@ function keyPressed() {
 
 function mousePressed() {
 	if (currentMode) {
-		let paintedButtons = currentMode.paintedButtons()
-		paintedButtons.forEach((b) => b.checkForClick(mouseX, mouseY))
+		currentMode.processMousePressed()
 	}
 }
 

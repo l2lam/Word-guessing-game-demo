@@ -5,15 +5,15 @@ const BUTTON_GAP = 10
 /** A base class for a screen: analogous to a page, scene, etc. */
 class Screen {
 	static BgHorizontalAlign = {
-		LEFT: 'Left',
-		CENTER: 'Center',
-		RIGHT: 'Right',
+		LEFT: "Left",
+		CENTER: "Center",
+		RIGHT: "Right",
 	}
 
 	static BgVerticalAlign = {
-		TOP: 'Top',
-		CENTER: 'Center',
-		BOTTOM: 'Bottom',
+		TOP: "Top",
+		CENTER: "Center",
+		BOTTOM: "Bottom",
 	}
 
 	constructor(
@@ -58,7 +58,7 @@ class Screen {
 				background(this.formattedBgImage, 100)
 			} else {
 				print(
-					'Error: Screen::drawBackground(): Formatting background image failed.'
+					"Error: Screen::drawBackground(): Formatting background image failed."
 				)
 			}
 		}
@@ -88,7 +88,7 @@ class Screen {
 						break
 					default:
 						print(
-							'Invalid vertical alignment specified for background, defaulting to top'
+							"Invalid vertical alignment specified for background, defaulting to top"
 						)
 						yPos = 0
 				}
@@ -120,7 +120,7 @@ class Screen {
 						break
 					default:
 						print(
-							'Invalid horizontal alignment specified for background, defaulting to left'
+							"Invalid horizontal alignment specified for background, defaulting to left"
 						)
 						xPos = 0
 				}
@@ -158,5 +158,10 @@ class Screen {
 	resizeBackground() {
 		this.formattedBgImage = this.formatBackground()
 		this.drawBackground()
+	}
+
+	processKeyInput(key) {}
+	processMousePressed() {
+		this.paintedButtons().forEach((b) => b.checkForClick(mouseX, mouseY))
 	}
 }

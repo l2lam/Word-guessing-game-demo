@@ -24,7 +24,6 @@ class Game extends Screen {
 	) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
-		this.winImage = loadImage("assets/winscreen.jpg")
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -51,13 +50,11 @@ class Game extends Screen {
 			new BankruptSpinOption(100),
 		]
 		this.createButtons()
-		this.gotoNextLevel()
 	}
 
 	/** Game initialization */
 	init() {
 		this.hasWon = false
-		this.quitGame = false
 		this._returnToPreviousScreen = false
 		this.livesRemaining = 0
 		this.guess = []
@@ -70,7 +67,6 @@ class Game extends Screen {
 		this.correctLetterIndices = []
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
-		this.gotoNextLevel()
 		this.setupPhrases()
 	}
 
@@ -117,13 +113,12 @@ class Game extends Screen {
 
 	/** Calculate the current game state */
 	gameState() {
+		if (this.hasWon) return GameStates.WIN
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
 		let gameSolved = !this.guess.includes(this.noGuessChar)
-		if (this.quitGame) return GameStates.QUIT
 		if (gameSolved) return GameStates.SOLVED
-		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
@@ -138,9 +133,9 @@ class Game extends Screen {
 	// Draw the game screen(s)
 	setupPhrases() {
 		if (customPhrases.length > 0) {
-			this.phrases = customPhrases
+			this.phrases = customPhrases.slice()
 		} else {
-			this.phrases = this.defaultPhrases
+			this.phrases = this.defaultPhrases.slice()
 		}
 		this.numPhrases = this.phrases.length
 		this.level = 0
@@ -160,12 +155,6 @@ class Game extends Screen {
 
 				case GameStates.WIN:
 					this.drawWinScreen()
-					this.pause(5000)
-					this.quitGame = true
-					break
-
-				case GameStates.QUIT:
-					this._returnToPreviousScreen = true
 					break
 
 				case GameStates.SPINNING:
@@ -193,11 +182,19 @@ class Game extends Screen {
 					) {
 						this.spinResultSequence = 0
 						this.score = this.currentSpinOption.newScore(this.score)
-					} else this.pause(100)
+					} else {
+						this.pause(5000)
+					}
 					break
 
 				case GameStates.SOLVED:
-					if (this.score >= targetScore) this.hasWon = true
+					if (this.score >= targetScore) {
+						this.hasWon = true
+						fireworks = [] // reset fireworks for the win screen
+						let totalScore = this.score + targetScore
+						this.fireworksIntensity = 1.0 - targetScore / totalScore
+						this.fireworksVolume = this.score / totalScore / 8
+					}
 					this.drawSolvedMessage()
 					this.level++
 					this.gotoNextLevel()
@@ -244,8 +241,22 @@ class Game extends Screen {
 		this.drawBottomBar()
 	}
 
+	formatPoints(points) {
+		// TODO make this configurable, or at least respect the current locale
+		return Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: "USD",
+			minimumFractionDigits: 0,
+		}).format(points)
+	}
+
 	drawWinScreen() {
-		image(this.winImage, width / 2 - 250, height * 0.25, 500, 500)
+		// TODO, adjust fireworks intensity and volume based on score
+		drawFireworks(
+			`You WIN!\n${this.formatPoints(this.score)}`,
+			this.fireworksIntensity,
+			this.fireworksVolume
+		)
 	}
 
 	drawSolvedMessage() {
@@ -255,7 +266,7 @@ class Game extends Screen {
 				"Awesome",
 				"Wonderful",
 				"Yes, you so good yo!",
-				"I love you!",
+				"Amazing!",
 				"Well done!",
 			]),
 			this.curPhrase.phrase
@@ -315,7 +326,7 @@ class Game extends Screen {
 
 	drawBottomBar() {
 		push()
-		this.drawInstructions()
+		// this.drawInstructions()
 		fill(50, 50, 50, 180)
 		rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70)
 		textSize(20)
@@ -325,17 +336,19 @@ class Game extends Screen {
 				" "
 			)}`,
 			width / 2,
-			LINE_SPACING * 8
+			LINE_SPACING * 7
 		)
 
 		text(
-			`Points per letter: ${this.currentSpinOption.perLetterScore}`,
+			`Each correct letter is worth ${this.formatPoints(
+				this.currentSpinOption.perLetterScore
+			)}`,
 			width / 2,
-			LINE_SPACING * 9
+			LINE_SPACING * 8
 		)
 
 		if (this.wrongGuesses.length > 1) {
-			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
+			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 9)
 		}
 		this.drawTargetScore()
 		this.drawProgressBar()
@@ -355,18 +368,18 @@ class Game extends Screen {
 		pop()
 	}
 
-	drawInstructions() {
-		push()
-		textAlign(CENTER, CENTER)
-		fill(0, 200, 200)
-		textSize(15)
-		text(
-			"Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game",
-			width / 2,
-			LINE_SPACING * 6.5
-		)
-		pop()
-	}
+	// drawInstructions() {
+	// 	push()
+	// 	textAlign(CENTER, CENTER)
+	// 	fill(0, 200, 200)
+	// 	textSize(15)
+	// 	text(
+	// 		"Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game",
+	// 		width / 2,
+	// 		LINE_SPACING * 6.5
+	// 	)
+	// 	pop()
+	// }
 
 	drawCategory() {
 		push()
@@ -399,7 +412,7 @@ class Game extends Screen {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		text(this.score, width / 2, LINE_SPACING)
+		text(this.formatPoints(this.score), width / 2, LINE_SPACING)
 		pop()
 	}
 
@@ -410,12 +423,12 @@ class Game extends Screen {
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(
-			"You need a total of " + targetScore + " points to win.",
+			`You need a total of ${this.formatPoints(targetScore)} to win`,
 			width / 2,
 			LINE_SPACING * 13
 		)
 		text(
-			"Only " + this.calculatePointsToGo() + " points to go!",
+			`Only ${this.formatPoints(this.calculatePointsToGo())} to go!`,
 			width / 2,
 			LINE_SPACING * 14
 		)
@@ -493,6 +506,17 @@ class Game extends Screen {
 			} else if (keyPressed === "F4") {
 				this.onSpinButtonPressed()
 			}
+		}
+	}
+
+	processMousePressed() {
+		switch (this.gameState()) {
+			case GameStates.WIN:
+			case GameStates.GAME_OVER:
+				this._returnToPreviousScreen = true
+				break
+			default:
+				super.processMousePressed()
 		}
 	}
 
