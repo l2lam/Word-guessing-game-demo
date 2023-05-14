@@ -1,45 +1,68 @@
-const file_input = document.getElementById("file-input")
-const file_selector = document.getElementById("file-selector")
+let customPhrases = []
+let targetScore = 2000
 
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {
 		super(name, description, bgColor)
+		this.createControls()
 		this.createButtons()
 	}
 
 	init() {
 		this._returnToPreviousScreen = false
-		file_input.style.display = "block"
-		file_selector.style.display = "block"
+	}
+
+	createControls() {
+		this.fileInput = createInput("", "file")
+		this.fileInput.elt.accept = ".csv"
+		this.fileInput.changed((event) => {
+			let importer = new CsvPhraseImporter(event.target.files[0])
+			customPhrases = importer.phrases
+		})
+		this.fileInput.hide()
+
+		// this.controls.push(fileInput)
+		// this.constrols.forEach((c, i) => {
+		// 	c.position(width/2, LINE_SPACING * i + 100)
+
+		// }
+		// )
 	}
 
 	createButtons() {
-		const buttonRadius = 30
 		this.buttons = [
-			// The button to return to the main menu
-			new PaintedButton(
-				"↩",
+			// CSV file inport
+			new RectangularPaintedButton(
+				"Import Phrases",
 				0,
 				0,
-				buttonRadius,
+				BUTTON_WIDTH,
 				() => {
-					this._returnToPreviousScreen = true
+					this.fileInput.elt.click()
 				},
+				() => {}
+			),
+			new RectangularPaintedButton(
+				"Set Target Score",
+				0,
+				0,
+				BUTTON_WIDTH,
 				() => {
-					fill("grey")
-					textSize(40)
+					let result = parseInt(prompt("Set target score", str(targetScore)))
+					if (!isNaN(result)) targetScore = result
 				}
 			),
+			// The button to return to the main menu
+			new RectangularPaintedButton("↩ Back", 0, 0, BUTTON_WIDTH, () => {
+				this._returnToPreviousScreen = true
+				this.onReturnToPreviousScreen()
+			}),
 		]
+		const n = this.buttons.length
 		this.buttons.forEach((button, i) => {
-			button.y = height * (5 / 8)
+			button.y = i * (BUTTON_HEIGHT + BUTTON_GAP) + 200
 			button.x = width / 2
 		})
-	}
-
-	onReturnToPreviousScreen() {
-		file_input.style.display = "none"
-		file_selector.style.display = "none"
 	}
 
 	paintedButtons() {
@@ -51,7 +74,7 @@ class ConfigurationScreen extends Screen {
 		fill(0, 50, 50)
 		textAlign(CENTER, CENTER)
 		textSize(30)
-		text("Please select a .csv file", width / 2, 60)
+		text("Configuration", width / 2, 60)
 		this.buttons.forEach((b) => b.render())
 	}
 }

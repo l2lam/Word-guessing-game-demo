@@ -74,19 +74,19 @@ class Game extends Screen {
 
 	createButtons() {
 		const buttonGap = 20
-		const buttonRadius = 30
+		const buttonRadius = 50
 		this.buttons = [
 			// The button to spin for points
-			new PaintedButton("🎲", 0, 0, buttonRadius, () =>
+			new PaintedButton("🎲\nSpin", 0, 0, buttonRadius, () =>
 				this.onSpinButtonPressed()
 			),
 			// The button to show the on-screen keyboard
-			new PaintedButton("⌨️", 0, 0, buttonRadius, () =>
+			new PaintedButton("⌨️\nVirtual\nKeyboard", 0, 0, buttonRadius, () =>
 				navigator.virtualKeyboard.show()
 			),
 			// The button to quit the game and return to the previous screen
 			new PaintedButton(
-				"↩",
+				"↩\nBack",
 				0,
 				0,
 				buttonRadius,
@@ -134,8 +134,8 @@ class Game extends Screen {
 
 	// Draw the game screen(s)
 	setupPhrases() {
-		if (file_selector.selectedIndex !== 0) {
-			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
+		if (customPhrases.length > 0) {
+			this.phrases = customPhrases
 		} else {
 			this.phrases = this.defaultPhrases
 		}
@@ -271,10 +271,12 @@ class Game extends Screen {
 
 	drawGameOver() {
 		this.drawBackground()
+		push()
 		fill(255, 0, 0)
 		textAlign(CENTER, CENTER)
 		textSize(70)
 		text("Game Over", width / 2 + random(2), height / 2 + random(2))
+		pop()
 	}
 
 	drawIncorrectGuessMessage() {
@@ -282,6 +284,7 @@ class Game extends Screen {
 	}
 
 	drawPuzzle() {
+		push()
 		textAlign(LEFT, CENTER)
 		textWrap(WORD)
 		fill(0, 0, 0)
@@ -301,9 +304,11 @@ class Game extends Screen {
 			//this.pause(100);
 		}
 		text(puzzle.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN)
+		pop()
 	}
 
 	drawBottomBar() {
+		push()
 		this.drawInstructions()
 		fill(50, 50, 50, 180)
 		rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70)
@@ -329,9 +334,11 @@ class Game extends Screen {
 		this.drawTargetScore()
 		this.drawProgressBar()
 		this.buttons.forEach((b) => b.render())
+		pop()
 	}
 
 	drawTopBar() {
+		push()
 		// Show level, score, lives
 		fill(50, 50, 50, 180)
 		rect(5, 5, width - 10, LINE_SPACING * 2, 70)
@@ -339,9 +346,11 @@ class Game extends Screen {
 		this.drawScore()
 		this.drawLivesRemaining()
 		this.drawCategory()
+		pop()
 	}
 
 	drawInstructions() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(0, 200, 200)
 		textSize(15)
@@ -350,16 +359,20 @@ class Game extends Screen {
 			width / 2,
 			LINE_SPACING * 6.5
 		)
+		pop()
 	}
 
 	drawCategory() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(0, 200, 200)
 		textSize(20)
 		text(this.curPhrase.category, width / 2, LINE_SPACING * 1.7)
+		pop()
 	}
 
 	drawLevel() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
@@ -368,9 +381,11 @@ class Game extends Screen {
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(this.level, MARGIN * 2, LINE_SPACING)
+		pop()
 	}
 
 	drawScore() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
@@ -379,9 +394,11 @@ class Game extends Screen {
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(this.score, width / 2, LINE_SPACING)
+		pop()
 	}
 
 	drawTargetScore() {
+		push()
 		textAlign(CENTER, CENTER)
 		textSize(30)
 		fill(255, 255, 250)
@@ -396,6 +413,7 @@ class Game extends Screen {
 			width / 2,
 			LINE_SPACING * 14
 		)
+		pop()
 	}
 
 	drawProgressBar() {
@@ -426,6 +444,7 @@ class Game extends Screen {
 	}
 
 	drawLivesRemaining() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
@@ -434,6 +453,7 @@ class Game extends Screen {
 		fill(255, 30, 30)
 		strokeWeight(4)
 		text("❤️".repeat(this.livesRemaining), width - MARGIN * 2, LINE_SPACING)
+		pop()
 	}
 
 	gotoNextLevel() {
