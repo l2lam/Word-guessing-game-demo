@@ -241,14 +241,19 @@ class Game extends Screen {
 		this.drawBottomBar()
 	}
 
-	formattedScore() {
-		return str(this.score)
+	formatPoints(points) {
+		// TODO make this configurable, or at least respect the current locale
+		return Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: "USD",
+			minimumFractionDigits: 0,
+		}).format(points)
 	}
 
 	drawWinScreen() {
 		// TODO, adjust fireworks intensity and volume based on score
 		drawFireworks(
-			`You WIN!\n${this.formattedScore()}`,
+			`You WIN!\n${this.formatPoints(this.score)}`,
 			this.fireworksIntensity,
 			this.fireworksVolume
 		)
@@ -321,7 +326,7 @@ class Game extends Screen {
 
 	drawBottomBar() {
 		push()
-		this.drawInstructions()
+		// this.drawInstructions()
 		fill(50, 50, 50, 180)
 		rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70)
 		textSize(20)
@@ -331,17 +336,19 @@ class Game extends Screen {
 				" "
 			)}`,
 			width / 2,
-			LINE_SPACING * 8
+			LINE_SPACING * 7
 		)
 
 		text(
-			`Points per letter: ${this.currentSpinOption.perLetterScore}`,
+			`Each correct letter is worth ${this.formatPoints(
+				this.currentSpinOption.perLetterScore
+			)}`,
 			width / 2,
-			LINE_SPACING * 9
+			LINE_SPACING * 8
 		)
 
 		if (this.wrongGuesses.length > 1) {
-			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 10)
+			text(`Hint: ${this.curPhrase.hint}`, width / 2, LINE_SPACING * 9)
 		}
 		this.drawTargetScore()
 		this.drawProgressBar()
@@ -361,18 +368,18 @@ class Game extends Screen {
 		pop()
 	}
 
-	drawInstructions() {
-		push()
-		textAlign(CENTER, CENTER)
-		fill(0, 200, 200)
-		textSize(15)
-		text(
-			"Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game",
-			width / 2,
-			LINE_SPACING * 6.5
-		)
-		pop()
-	}
+	// drawInstructions() {
+	// 	push()
+	// 	textAlign(CENTER, CENTER)
+	// 	fill(0, 200, 200)
+	// 	textSize(15)
+	// 	text(
+	// 		"Guess what's hidden!  Press <F4> to spin for points, <F2> to restart the game",
+	// 		width / 2,
+	// 		LINE_SPACING * 6.5
+	// 	)
+	// 	pop()
+	// }
 
 	drawCategory() {
 		push()
@@ -405,7 +412,7 @@ class Game extends Screen {
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
-		text(this.score, width / 2, LINE_SPACING)
+		text(this.formatPoints(this.score), width / 2, LINE_SPACING)
 		pop()
 	}
 
@@ -416,12 +423,12 @@ class Game extends Screen {
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(
-			"You need a total of " + targetScore + " points to win.",
+			`You need a total of ${this.formatPoints(targetScore)} to win`,
 			width / 2,
 			LINE_SPACING * 13
 		)
 		text(
-			"Only " + this.calculatePointsToGo() + " points to go!",
+			`Only ${this.formatPoints(this.calculatePointsToGo())} to go!`,
 			width / 2,
 			LINE_SPACING * 14
 		)
