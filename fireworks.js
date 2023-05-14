@@ -1,4 +1,4 @@
-var fireworks = []
+let fireworks = []
 
 class Firework {
 	constructor(intensity = 1.0) {
@@ -63,7 +63,7 @@ function drawFireworks(message = "", intensity = 1.0, volume = 0.03) {
 	background(0, 0, 0, 25)
 	if (message) {
 		textAlign(CENTER, CENTER)
-		textSize(40)
+		textSize(50)
 		text(message, width / 2, height / 2)
 	}
 

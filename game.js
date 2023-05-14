@@ -50,7 +50,6 @@ class Game extends Screen {
 			new BankruptSpinOption(100),
 		]
 		this.createButtons()
-		this.gotoNextLevel()
 	}
 
 	/** Game initialization */
@@ -68,7 +67,6 @@ class Game extends Screen {
 		this.correctLetterIndices = []
 		this.pauseUntilMilliSecond = 0 // The # of ms since the program started to pause until
 		this.puzzleRevealCountdown = 0
-		this.gotoNextLevel()
 		this.setupPhrases()
 	}
 
@@ -115,12 +113,12 @@ class Game extends Screen {
 
 	/** Calculate the current game state */
 	gameState() {
+		if (this.hasWon) return GameStates.WIN
 		if (this.level > this.numPhrases) return GameStates.GAME_OVER
 		if (this.spinCount > 0) return GameStates.SPINNING
 		if (this.spinResultSequence > 0) return GameStates.SPINNING_FINISHED
 		let gameSolved = !this.guess.includes(this.noGuessChar)
 		if (gameSolved) return GameStates.SOLVED
-		if (this.hasWon) return GameStates.WIN
 		if (this.correctLetterIndices.length > 0) return GameStates.CORRECT_GUESS
 		if (this.incorrectGuessChar != null) return GameStates.INCORRECT_GUESS
 		if (this.livesRemaining <= 0) return GameStates.PUZZLE_UNSUCCESSFUL
@@ -135,9 +133,9 @@ class Game extends Screen {
 	// Draw the game screen(s)
 	setupPhrases() {
 		if (customPhrases.length > 0) {
-			this.phrases = customPhrases
+			this.phrases = customPhrases.slice()
 		} else {
-			this.phrases = this.defaultPhrases
+			this.phrases = this.defaultPhrases.slice()
 		}
 		this.numPhrases = this.phrases.length
 		this.level = 0
@@ -190,7 +188,13 @@ class Game extends Screen {
 					break
 
 				case GameStates.SOLVED:
-					if (this.score >= targetScore) this.hasWon = true
+					if (this.score >= targetScore) {
+						this.hasWon = true
+						fireworks = [] // reset fireworks for the win screen
+						let totalScore = this.score + targetScore
+						this.fireworksIntensity = 1.0 - targetScore / totalScore
+						this.fireworksVolume = this.score / totalScore / 8
+					}
 					this.drawSolvedMessage()
 					this.level++
 					this.gotoNextLevel()
@@ -237,9 +241,17 @@ class Game extends Screen {
 		this.drawBottomBar()
 	}
 
+	formattedScore() {
+		return str(this.score)
+	}
+
 	drawWinScreen() {
 		// TODO, adjust fireworks intensity and volume based on score
-		drawFireworks("You WIN!", 1.0, 0.2)
+		drawFireworks(
+			`You WIN!\n${this.formattedScore()}`,
+			this.fireworksIntensity,
+			this.fireworksVolume
+		)
 	}
 
 	drawSolvedMessage() {
