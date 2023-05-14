@@ -1,14 +1,14 @@
 const GameStates = {
-	GUESSING: 'Guessing',
-	CORRECT_GUESS: 'A letter is guessed correctly',
-	INCORRECT_GUESS: 'A letter is guessed incorrectly',
-	GAME_OVER: 'Game over',
-	PUZZLE_UNSUCCESSFUL: 'Failed to complete the puzzle',
-	SPINNING: 'Spinning for points',
-	SPINNING_FINISHED: 'Spinning completed',
-	SOLVED: 'Puzzle solved',
-	QUIT: 'Quit game',
-	WIN: 'Game win',
+	GUESSING: "Guessing",
+	CORRECT_GUESS: "A letter is guessed correctly",
+	INCORRECT_GUESS: "A letter is guessed incorrectly",
+	GAME_OVER: "Game over",
+	PUZZLE_UNSUCCESSFUL: "Failed to complete the puzzle",
+	SPINNING: "Spinning for points",
+	SPINNING_FINISHED: "Spinning completed",
+	SOLVED: "Puzzle solved",
+	QUIT: "Quit game",
+	WIN: "Game win",
 }
 
 class Game extends Screen {
@@ -16,7 +16,7 @@ class Game extends Screen {
 		name,
 		description,
 		defaultPhrases,
-		noGuessChar = '_',
+		noGuessChar = "_",
 		lives = 3,
 		bgImage = null,
 		bgHorizontalAlign,
@@ -24,7 +24,7 @@ class Game extends Screen {
 	) {
 		super(name, description, null, bgImage, bgHorizontalAlign, bgVerticalAlign)
 		this.bgImage = bgImage
-		this.winImage = loadImage('assets/winscreen.jpg')
+		this.winImage = loadImage("assets/winscreen.jpg")
 		this.noGuessChar = noGuessChar
 		this.livesPerRound = lives
 		this.livesRemaining = 0
@@ -76,24 +76,24 @@ class Game extends Screen {
 
 	createButtons() {
 		const buttonGap = 20
-		const buttonRadius = 30
+		const buttonRadius = 50
 		this.buttons = [
 			// The button to spin for points
-			new PaintedButton('🎲', 0, 0, buttonRadius, () =>
+			new PaintedButton("🎲\nSpin", 0, 0, buttonRadius, () =>
 				this.onSpinButtonPressed()
 			),
 			// The button to show the on-screen keyboard
-			new PaintedButton('⌨️', 0, 0, buttonRadius, () =>
+			new PaintedButton("⌨️\nVirtual\nKeyboard", 0, 0, buttonRadius, () =>
 				navigator.virtualKeyboard.show()
 			),
 			// The button to quit the game and return to the previous screen
 			new PaintedButton(
-				'🛑',
+				"↩\nBack",
 				0,
 				0,
 				buttonRadius,
 				() => (this._returnToPreviousScreen = true),
-				() => fill('grey')
+				() => fill("grey")
 			),
 		]
 		// Layout the buttons nicely in a row
@@ -137,8 +137,8 @@ class Game extends Screen {
 
 	// Draw the game screen(s)
 	setupPhrases() {
-		if (file_selector.selectedIndex !== 0) {
-			this.phrases = phraseCollectionList[file_selector.selectedIndex].slice() // Copy the new list of phrases
+		if (customPhrases.length > 0) {
+			this.phrases = customPhrases
 		} else {
 			this.phrases = this.defaultPhrases
 		}
@@ -251,12 +251,12 @@ class Game extends Screen {
 	drawSolvedMessage() {
 		drawMessage(
 			random([
-				'Way to go!',
-				'Awesome',
-				'Wonderful',
-				'Yes, you so good yo!',
-				'I love you!',
-				'Well done!',
+				"Way to go!",
+				"Awesome",
+				"Wonderful",
+				"Yes, you so good yo!",
+				"I love you!",
+				"Well done!",
 			]),
 			this.curPhrase.phrase
 		)
@@ -265,11 +265,11 @@ class Game extends Screen {
 	drawFailedMessage() {
 		drawMessage(
 			random([
-				'Too bad, so sad',
-				'Nope, better luck next time!',
-				'Booo!',
-				'Nope, fail',
-				'Oh poop',
+				"Too bad, so sad",
+				"Nope, better luck next time!",
+				"Booo!",
+				"Nope, fail",
+				"Oh poop",
 			]),
 			this.curPhrase.phrase
 		)
@@ -277,17 +277,20 @@ class Game extends Screen {
 
 	drawGameOver() {
 		this.drawBackground()
+		push()
 		fill(255, 0, 0)
 		textAlign(CENTER, CENTER)
 		textSize(70)
-		text('Game Over', width / 2 + random(2), height / 2 + random(2))
+		text("Game Over", width / 2 + random(2), height / 2 + random(2))
+		pop()
 	}
 
 	drawIncorrectGuessMessage() {
-		drawMessage('There is no...', this.incorrectGuessChar)
+		drawMessage("There is no...", this.incorrectGuessChar)
 	}
 
 	drawPuzzle() {
+		push()
 		textAlign(LEFT, CENTER)
 		textWrap(WORD)
 		fill(0, 0, 0)
@@ -297,19 +300,21 @@ class Game extends Screen {
 			puzzle = []
 			this.guess.forEach((c, i) =>
 				puzzle.push(
-					c === ' '
+					c === " "
 						? c
-						: ['Ò', 'Ó', 'Ô', 'Õ', 'Ö'][(i + this.puzzleRevealCountdown) % 5]
+						: ["Ò", "Ó", "Ô", "Õ", "Ö"][(i + this.puzzleRevealCountdown) % 5]
 				)
 			)
 			this.puzzleRevealCountdown--
 			playNewPuzzleSound()
 			//this.pause(100);
 		}
-		text(puzzle.join(' '), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN)
+		text(puzzle.join(" "), MARGIN, LINE_SPACING * 4, width - 2 * MARGIN)
+		pop()
 	}
 
 	drawBottomBar() {
+		push()
 		this.drawInstructions()
 		fill(50, 50, 50, 180)
 		rect(5, LINE_SPACING * 6, width - 10, LINE_SPACING * 12, 70)
@@ -317,7 +322,7 @@ class Game extends Screen {
 		fill(255, 100, 100)
 		text(
 			`${this.wrongGuesses.length} wrong guesses: ${this.wrongGuesses.join(
-				' '
+				" "
 			)}`,
 			width / 2,
 			LINE_SPACING * 8
@@ -335,9 +340,11 @@ class Game extends Screen {
 		this.drawTargetScore()
 		this.drawProgressBar()
 		this.buttons.forEach((b) => b.render())
+		pop()
 	}
 
 	drawTopBar() {
+		push()
 		// Show level, score, lives
 		fill(50, 50, 50, 180)
 		rect(5, 5, width - 10, LINE_SPACING * 2, 70)
@@ -345,9 +352,11 @@ class Game extends Screen {
 		this.drawScore()
 		this.drawLivesRemaining()
 		this.drawCategory()
+		pop()
 	}
 
 	drawInstructions() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(0, 200, 200)
 		textSize(15)
@@ -356,52 +365,61 @@ class Game extends Screen {
 			width / 2,
 			LINE_SPACING * 6.5
 		)
+		pop()
 	}
 
 	drawCategory() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(0, 200, 200)
 		textSize(20)
 		text(this.curPhrase.category, width / 2, LINE_SPACING * 1.7)
+		pop()
 	}
 
 	drawLevel() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
-		text('LEVEL', MARGIN * 2, LINE_SPACING - 25)
+		text("LEVEL", MARGIN * 2, LINE_SPACING - 25)
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(this.level, MARGIN * 2, LINE_SPACING)
+		pop()
 	}
 
 	drawScore() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
-		text('SCORE', width / 2, LINE_SPACING - 25)
+		text("SCORE", width / 2, LINE_SPACING - 25)
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(this.score, width / 2, LINE_SPACING)
+		pop()
 	}
 
 	drawTargetScore() {
+		push()
 		textAlign(CENTER, CENTER)
 		textSize(30)
 		fill(255, 255, 250)
 		strokeWeight(4)
 		text(
-			'You need a total of ' + targetScore + ' points to win.',
+			"You need a total of " + targetScore + " points to win.",
 			width / 2,
 			LINE_SPACING * 13
 		)
 		text(
-			'Only ' + this.calculatePointsToGo() + ' points to go!',
+			"Only " + this.calculatePointsToGo() + " points to go!",
 			width / 2,
 			LINE_SPACING * 14
 		)
+		pop()
 	}
 
 	drawProgressBar() {
@@ -432,14 +450,16 @@ class Game extends Screen {
 	}
 
 	drawLivesRemaining() {
+		push()
 		textAlign(CENTER, CENTER)
 		fill(150, 150, 200)
 		textSize(10)
-		text('LIVES', width - MARGIN * 2, LINE_SPACING - 25)
+		text("LIVES", width - MARGIN * 2, LINE_SPACING - 25)
 		textSize(32)
 		fill(255, 30, 30)
 		strokeWeight(4)
-		text('❤️'.repeat(this.livesRemaining), width - MARGIN * 2, LINE_SPACING)
+		text("❤️".repeat(this.livesRemaining), width - MARGIN * 2, LINE_SPACING)
+		pop()
 	}
 
 	gotoNextLevel() {
@@ -458,7 +478,7 @@ class Game extends Screen {
 			// Fill the guess array with underscores corresponding to the phrase
 			for (let i = 0; i < this.curPhrase.phrase.length; i++) {
 				this.guess.push(
-					this.curPhrase.phrase[i] == ' ' ? ' ' : this.noGuessChar
+					this.curPhrase.phrase[i] == " " ? " " : this.noGuessChar
 				)
 			}
 			this.puzzleRevealCountdown = this.curPhrase.phrase.length
@@ -470,7 +490,7 @@ class Game extends Screen {
 		if (this.gameState() == GameStates.GUESSING) {
 			if (keyPressed.match(/^[a-z0-9+-=?']$/i)) {
 				this.processGuess(keyPressed)
-			} else if (keyPressed === 'F4') {
+			} else if (keyPressed === "F4") {
 				this.onSpinButtonPressed()
 			}
 		}
