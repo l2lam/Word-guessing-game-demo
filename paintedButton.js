@@ -61,11 +61,11 @@ class RectangularPaintedButton extends PaintedButton {
 		push()
 		textSize(16)
 		stroke("black")
-		fill("grey")
+		fill(250, 150, 150)
 		if (this.customStylerCallback) this.customStylerCallback()
 		let rectX = this.x - this.radius
 		let rectY = this.y - this.height / 2
-		rect(rectX, rectY, this.radius * 2, this.height)
+		rect(rectX, rectY, this.radius * 2, this.height, 20)
 		textAlign(CENTER)
 		fill("black")
 		text(this.label, this.x, this.y)

@@ -2,6 +2,16 @@ const BUTTON_WIDTH = 200
 const BUTTON_HEIGHT = 50
 const BUTTON_GAP = 10
 
+let screenStack = []
+let currentScreen = null
+function pushScreen(screen) {
+	if (currentScreen) screenStack.push(currentScreen)
+	currentScreen = screen
+}
+function popScreen() {
+	if (screenStack.length > 0) currentScreen = screenStack.pop()
+}
+
 /** A base class for a screen: analogous to a page, scene, etc. */
 class Screen {
 	static BgHorizontalAlign = {
@@ -24,7 +34,6 @@ class Screen {
 		bgHorizontalAlign = Screen.BgHorizontalAlign.CENTER,
 		bgVerticalAlign = Screen.BgVerticalAlign.CENTER
 	) {
-		this._returnToPreviousScreen = false
 		this.name = name
 		this.bgColor = bgColor
 		this.bgImage = bgImage
@@ -145,13 +154,6 @@ class Screen {
 	/** Get the list of painted buttons that should be monitored for activity */
 	paintedButtons() {
 		return []
-	}
-
-	/** To be called when returning to previous screen */
-	onReturnToPreviousScreen() {}
-
-	returnToPreviousScreen() {
-		return this._returnToPreviousScreen
 	}
 
 	/** Reformat background image to current canvas size. */

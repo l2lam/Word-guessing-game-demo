@@ -4,7 +4,7 @@ class Firework {
 	constructor(intensity = 1.0) {
 		this.intensity = intensity
 		this.hu = random(255)
-		this.firework = new Particle(random(width), height, this.hu, true)
+		this.firework = new Particle(random(width), height, this.hu)
 		this.exploded = false
 		this.particles = []
 		this.gravity = createVector(0, 0.3)
@@ -38,12 +38,11 @@ class Firework {
 
 	explode() {
 		playExplosionSound(this.intensity)
-		for (var i = 0; i < 100; i++) {
-			var p = new Particle(
+		for (var i = 0; i < 50; i++) {
+			var p = new ExplodedParticle(
 				this.firework.pos.x,
 				this.firework.pos.y,
-				this.hu,
-				false
+				this.hu
 			)
 			this.particles.push(p)
 		}
@@ -79,18 +78,11 @@ function drawFireworks(message = "", intensity = 1.0, volume = 0.03) {
 }
 
 class Particle {
-	constructor(x, y, hu, firework) {
+	constructor(x, y, hu) {
 		this.pos = createVector(x, y)
-		this.firework = firework
-		this.lifespan = 255
 		this.hu = hu
 
-		if (this.firework) {
-			this.vel = createVector(0, random(-12, -22))
-		} else {
-			this.vel = p5.Vector.random2D()
-			this.vel.mult(random(2, 10))
-		}
+		this.vel = createVector(0, random(-12, -22))
 		this.acc = createVector(0, 0)
 	}
 
@@ -99,33 +91,44 @@ class Particle {
 	}
 
 	update() {
-		//second update
-		if (!this.firework) {
-			this.vel.mult(0.9)
-			this.lifespan -= 4
-		}
 		this.vel.add(this.acc)
 		this.pos.add(this.vel)
 		this.acc.mult(0)
 	}
 	done() {
-		if (this.lifespan < 0) {
-			return true
-		} else {
-			return false
-		}
+		return false
+	}
+	showStroke() {
+		strokeWeight(4)
+		stroke(this.hu, 255, 255)
 	}
 	show() {
 		push()
 		colorMode(HSB)
-		if (!this.firework) {
-			strokeWeight(2)
-			stroke(this.hu, 255, 255, this.lifespan)
-		} else {
-			strokeWeight(4)
-			stroke(this.hu, 255, 255)
-		}
+		this.showStroke()
 		point(this.pos.x, this.pos.y)
 		pop()
+	}
+}
+
+class ExplodedParticle extends Particle {
+	constructor(x, y, hu, firework) {
+		super(x, y, hu)
+		this.lifespan = 255
+		this.vel = p5.Vector.random2D()
+		this.vel.mult(random(2, 30))
+	}
+
+	update() {
+		this.vel.mult(0.9)
+		this.lifespan -= 4
+		super.update()
+	}
+	done() {
+		return this.lifespan < 0
+	}
+	showStroke() {
+		strokeWeight(2)
+		stroke(this.hu, 255, 255, this.lifespan)
 	}
 }
