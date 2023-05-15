@@ -55,7 +55,6 @@ class Game extends Screen {
 	/** Game initialization */
 	init() {
 		this.hasWon = false
-		this._returnToPreviousScreen = false
 		this.livesRemaining = 0
 		this.guess = []
 		this.wrongGuesses = []
@@ -88,8 +87,12 @@ class Game extends Screen {
 				0,
 				0,
 				buttonRadius,
-				() => (this._returnToPreviousScreen = true),
-				() => fill("grey")
+				() => {
+					popScreen()
+				},
+				() => {
+					fill("grey")
+				}
 			),
 		]
 		// Layout the buttons nicely in a row
@@ -513,7 +516,7 @@ class Game extends Screen {
 		switch (this.gameState()) {
 			case GameStates.WIN:
 			case GameStates.GAME_OVER:
-				this._returnToPreviousScreen = true
+				popScreen()
 				break
 			default:
 				super.processMousePressed()

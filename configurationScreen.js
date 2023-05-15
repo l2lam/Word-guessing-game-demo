@@ -8,10 +8,6 @@ class ConfigurationScreen extends Screen {
 		this.createButtons()
 	}
 
-	init() {
-		this._returnToPreviousScreen = false
-	}
-
 	createControls() {
 		this.fileInput = createInput("", "file")
 		this.fileInput.elt.accept = ".csv"
@@ -20,13 +16,6 @@ class ConfigurationScreen extends Screen {
 			customPhrases = importer.phrases
 		})
 		this.fileInput.hide()
-
-		// this.controls.push(fileInput)
-		// this.constrols.forEach((c, i) => {
-		// 	c.position(width/2, LINE_SPACING * i + 100)
-
-		// }
-		// )
 	}
 
 	createButtons() {
@@ -54,8 +43,7 @@ class ConfigurationScreen extends Screen {
 			),
 			// The button to return to the main menu
 			new RectangularPaintedButton("↩ Back", 0, 0, BUTTON_WIDTH, () => {
-				this._returnToPreviousScreen = true
-				this.onReturnToPreviousScreen()
+				popScreen()
 			}),
 		]
 		const n = this.buttons.length
