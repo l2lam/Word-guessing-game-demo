@@ -1,5 +1,5 @@
 let customPhrases = []
-let targetScore = 2000
+let targetScore = 3000
 
 class ConfigurationScreen extends Screen {
 	constructor(name, description, bgColor) {

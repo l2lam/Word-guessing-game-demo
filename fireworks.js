@@ -89,7 +89,7 @@ class Particle {
 			this.vel = createVector(0, random(-12, -22))
 		} else {
 			this.vel = p5.Vector.random2D()
-			this.vel.mult(random(2, 10))
+			this.vel.mult(random(2, 30))
 		}
 		this.acc = createVector(0, 0)
 	}

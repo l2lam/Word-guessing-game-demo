@@ -26,7 +26,7 @@ function keyPressed() {
 	if (key === "Escape") {
 		popScreen()
 		// Otherwise we ignore the shift key and pass the input to the game for processing.
-	} else if (key !== "Shift" && currentMode) currentScreen.processKeyInput(key)
+	} else if (key !== "Shift") currentScreen.processKeyInput(key)
 }
 
 function mousePressed() {
