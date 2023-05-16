@@ -218,6 +218,7 @@ class Game extends Screen {
 					this.drawIncorrectGuessMessage()
 					this.wrongGuesses.push(this.incorrectGuessChar)
 					this.incorrectGuessChar = null
+					this.score -= Math.floor(this.currentSpinOption.perLetterScore / 2)
 					playIncorrectGuessSound()
 					this.pause(2000)
 					break
