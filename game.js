@@ -78,12 +78,12 @@ class Game extends Screen {
 				this.onSpinButtonPressed()
 			),
 			// The button to show the on-screen keyboard
-			new PaintedButton("⌨️\nVirtual\nKeyboard", 0, 0, buttonRadius, () =>
-				navigator.virtualKeyboard.show()
-			),
+			// new PaintedButton("⌨️\nVirtual\nKeyboard", 0, 0, buttonRadius, () =>
+			// 	navigator.virtualKeyboard.show()
+			// ),
 			// The button to quit the game and return to the previous screen
 			new PaintedButton(
-				"↩\nBack",
+				"↩\nQuit",
 				0,
 				0,
 				buttonRadius,

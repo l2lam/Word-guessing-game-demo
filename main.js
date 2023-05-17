@@ -2,6 +2,7 @@
 // that may take a little while to finish
 function preload() {
 	preLoadSoundFiles()
+	preLoadImageFiles()
 }
 
 function setup() {
@@ -12,9 +13,7 @@ function setup() {
 	frameRate(20)
 
 	// Add the main screen to the screen stack
-	pushScreen(
-		new MainScreen("Main", "", loadImage("assets/snowman-background.jpeg"))
-	)
+	pushScreen(new MainScreen("Main", "", snowmanBackground))
 }
 
 function draw() {

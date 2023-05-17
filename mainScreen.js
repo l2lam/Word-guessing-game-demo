@@ -20,7 +20,7 @@ class MainScreen extends Screen {
 							gradeOnePhrases,
 							"🍪",
 							5,
-							loadImage("assets/candy.jpg"),
+							candyBackground,
 							Screen.BgHorizontalAlign.CENTER,
 							Screen.BgVerticalAlign.BOTTOM
 						)
@@ -40,7 +40,7 @@ class MainScreen extends Screen {
 							standardPhrases,
 							"_",
 							3,
-							loadImage("assets/candy.jpg"),
+							candyBackground,
 							Screen.BgHorizontalAlign.CENTER,
 							Screen.BgVerticalAlign.BOTTOM
 						)
